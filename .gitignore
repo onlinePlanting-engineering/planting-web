@@ -2,4 +2,4 @@
 .gitignore
 .idea/
 db.sqlite3
-*.pyc
+planting/__pycache__/

@@ -1,0 +1,8 @@
+{
+  "name": "Online Planting",
+  "description": "Online planting which provide a platform for user lending a land to planting which he/she want to .",
+  "image": "heroku/python",
+  "repository": "https://github.com/onlinePlanting-engineering/planting-web.git",
+  "keywords": ["python", "django" ],
+  "addons": [ "heroku-postgresql" ]
+}

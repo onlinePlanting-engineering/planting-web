@@ -17,7 +17,11 @@ from django.conf.urls import url, include
 from django.contrib import admin
 admin.autodiscover()
 
+from rest_framework_jwt.views import obtain_jwt_token
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api/users/', include('account.api.urls', namespace='users-api'))
+    url(r'^api/users/', include('account.api.urls', namespace='users-api')),
+    url(r'^api/auth/token/', obtain_jwt_token),
+    url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

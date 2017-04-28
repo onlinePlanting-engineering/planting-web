@@ -84,7 +84,7 @@ class UserLoginSerializer(ModelSerializer):
             'username',
             'email',
             'password',
-            'token',
+            # 'token',
         ]
         extra_kwargs = {
             'password':

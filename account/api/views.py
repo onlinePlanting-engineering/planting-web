@@ -44,8 +44,17 @@ class UserLoginAPIView(APIView):
         if serializer.is_valid(raise_exception=True):
             new_data = serializer.data
             user = authenticate(username=data['username'], password=data['password'])
-            login(request, user)
-            return Response(new_data, status=HTTP_200_OK)
+            if user:
+                login(request, user)
+                return Response(new_data, status=HTTP_200_OK)
+            else:
+                return Response(
+                    {
+                        'retCode':HTTP_400_BAD_REQUEST,
+                        'msg': 'invalid username'
+                    },
+                    status=HTTP_400_BAD_REQUEST
+                )
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 class UserLogoutAPIView(APIView):

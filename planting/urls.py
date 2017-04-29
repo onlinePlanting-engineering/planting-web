@@ -23,5 +23,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/users/', include('account.api.urls', namespace='users-api')),
     url(r'^api/auth/token/', obtain_jwt_token),
-    url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
+    # url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

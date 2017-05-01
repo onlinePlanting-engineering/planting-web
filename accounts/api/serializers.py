@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 import re
+from accounts.models import Profile
 
 from rest_framework.serializers import (
 ModelSerializer,
@@ -10,6 +11,16 @@ CharField,
 
 User = get_user_model()
 
+class ProfileSerializer(ModelSerializer):
+    class Meta:
+        fields = [
+            'nickname',
+            'gender',
+            'addr',
+            'img_heading'
+        ]
+        model = Profile
+
 class UserListSerializer(ModelSerializer):
     class Meta:
         model = User
@@ -18,14 +29,30 @@ class UserListSerializer(ModelSerializer):
             'email',
         ]
 
-class UserDetailSerializer(ModelSerializer):
+
+
+class UserSerializer(ModelSerializer):
+    profile = ProfileSerializer()
     class Meta:
         model = User
-        fields = [
-            'username',
-            'email',
-            'first_name',
-        ]
+        fields = ('id', 'username', 'profile')
+
+    def update(self, instance, validated_data):
+        profile_data = validated_data.pop('profile')
+        profile = instance.profile
+
+        instance.username = validated_data.get('username', instance.username)
+        instance.save()
+
+        profile.nickname = profile_data.get('nickname', profile.nickname)
+        profile.addr = profile_data.get('addr', profile.addr)
+        profile.gender = profile_data.get('gender', profile.gender)
+
+        profile.img_heading = profile_data.get('img_heading', profile.img_heading)
+
+        profile.save()
+
+        return instance
 
 class UserCreateSerializer(ModelSerializer):
     class Meta:

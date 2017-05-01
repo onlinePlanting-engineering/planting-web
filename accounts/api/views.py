@@ -1,13 +1,4 @@
-from django.contrib.auth import get_user_model, authenticate, login, logout
-from rest_framework.authentication import (
-    TokenAuthentication,
-    get_authorization_header
-)
-from rest_framework.authtoken.models import Token
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.exceptions import AuthenticationFailed
-from datetime import datetime, timedelta
-import pytz
+from django.contrib.auth import get_user_model, logout
 
 from rest_framework.response import Response
 from rest_framework.status import (
@@ -18,25 +9,25 @@ from rest_framework.status import (
 )
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework import viewsets
 
 from rest_framework.generics import (
-CreateAPIView,
-ListAPIView,
+    CreateAPIView,
+    ListAPIView,
+    RetrieveUpdateDestroyAPIView
 )
 from rest_framework.permissions import (
-AllowAny,
-IsAdminUser,
-IsAuthenticated,
-IsAuthenticatedOrReadOnly
+    AllowAny,
 )
 
 User = get_user_model()
 
 from .serializers import (
-UserCreateSerializer,
-UserLoginSerializer,
-UserListSerializer,
+    UserCreateSerializer,
+    UserListSerializer,
+    UserSerializer,
 )
+from accounts.models import Profile
 
 class UserListAPIView(ListAPIView):
     serializer_class = UserListSerializer
@@ -91,3 +82,7 @@ def reset_password(request):
         'detail': 'password update succeed',
         'status_code': HTTP_200_OK
     }, status=HTTP_200_OK)
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

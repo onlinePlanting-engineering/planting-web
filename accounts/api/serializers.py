@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
+import re
 
 from rest_framework.serializers import (
 ModelSerializer,
@@ -41,6 +42,14 @@ class UserCreateSerializer(ModelSerializer):
                 }
         }
 
+    def validate(self, data):
+        username = data.get('username')
+        pattern = re.compile(r'^1[34578]\d{9}$')
+
+        if not pattern.match(username):
+            raise ValidationError('Please input a valid phone number.')
+        return data
+
     def create(self, validated_data):
         username = validated_data['username']
         password = validated_data['password']
@@ -53,7 +62,7 @@ class UserCreateSerializer(ModelSerializer):
         return validated_data
 
 class UserLoginSerializer(ModelSerializer):
-    token = CharField(allow_blank=True, read_only=True)
+    token = CharField(allow_blank=True, read_only=True, validators=[])
     username = CharField(required=True, allow_blank=True)
     class Meta:
         model = User

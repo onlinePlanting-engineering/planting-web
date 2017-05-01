@@ -1,8 +1,23 @@
 from django.contrib.auth import get_user_model, authenticate, login, logout
+from rest_framework.authentication import (
+    TokenAuthentication,
+    get_authorization_header
+)
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.exceptions import AuthenticationFailed
+from datetime import datetime, timedelta
+import pytz
 
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
+from rest_framework.status import (
+    HTTP_200_OK,
+    HTTP_400_BAD_REQUEST,
+    HTTP_405_METHOD_NOT_ALLOWED,
+    HTTP_404_NOT_FOUND
+)
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view, permission_classes
 
 from rest_framework.generics import (
 CreateAPIView,
@@ -32,21 +47,47 @@ class UserCreateAPIView(CreateAPIView):
     queryset = User.objects.all()
     permission_classes = [AllowAny]
 
-class UserLoginAPIView(APIView):
-    permission_classes = [AllowAny]
-    serializer_class = UserLoginSerializer
-
-    def post(self, request, *args, **kwargs):
-        data = request.data
-        serializer = UserLoginSerializer(data=data)
-        if serializer.is_valid(raise_exception=True):
-            new_data = serializer.data
-            return Response(new_data, status=HTTP_200_OK)
-        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
-
 class UserLogoutAPIView(APIView):
     queryset = User.objects.all()
-
+    permission_classes = [AllowAny]
     def get(self, request, format=None):
         logout(request)
         return Response(status=HTTP_200_OK)
+
+@api_view(['PUT'])
+@permission_classes((AllowAny, ))
+def reset_password(request):
+    if request.method != 'PUT':
+        return Response(data={
+            'detail':'please use PUT http method',
+            'status_code': HTTP_405_METHOD_NOT_ALLOWED
+        })
+
+    user_obj = None
+
+    username = request.data.get('username', None)
+    password = request.data.get('password', None)
+
+    if username:
+        qs = User.objects.filter(username=username)
+        if qs.exists and qs.count() == 1:
+            user_obj = qs.first()
+
+    if not user_obj:
+        return Response(data={
+            'detail':'phone number not found',
+            'status_code':HTTP_404_NOT_FOUND
+        }, status=HTTP_404_NOT_FOUND)
+
+    if not password:
+        return Response(data={
+            'detail': 'invalid password',
+            'status_code': HTTP_400_BAD_REQUEST
+        }, status=HTTP_400_BAD_REQUEST)
+
+    user_obj.set_password(password)
+    user_obj.save()
+    return Response(data={
+        'detail': 'password update succeed',
+        'status_code': HTTP_200_OK
+    }, status=HTTP_200_OK)

@@ -18,7 +18,9 @@ from rest_framework.generics import (
 )
 from rest_framework.permissions import (
     AllowAny,
+    IsAuthenticated
 )
+from accounts.permissions import IsOwnerOrReadOnly
 
 User = get_user_model()
 
@@ -81,6 +83,19 @@ def reset_password(request):
     return Response(data={
         'detail': 'password update succeed',
         'status_code': HTTP_200_OK
+    }, status=HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes((IsOwnerOrReadOnly, IsAuthenticated))
+def get_current_user_info(request):
+
+    user_info = request.user
+
+    serializer = UserSerializer(user_info)
+
+    return Response(data={
+        'status_code' : HTTP_200_OK,
+        'data' : serializer.data
     }, status=HTTP_200_OK)
 
 class UserViewSet(viewsets.ModelViewSet):

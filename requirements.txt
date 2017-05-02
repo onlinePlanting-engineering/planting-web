@@ -6,6 +6,7 @@ coreschema==0.0.4
 defusedxml==0.5.0
 dj-database-url==0.4.2
 Django==1.11
+django-filter==1.0.2
 djangorestframework==3.4.6
 djangorestframework-expiring-authtoken==0.1.4
 djangorestframework-jwt==1.10.0

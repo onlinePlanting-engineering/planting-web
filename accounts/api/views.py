@@ -26,14 +26,8 @@ User = get_user_model()
 
 from .serializers import (
     UserCreateSerializer,
-    UserListSerializer,
     UserSerializer,
 )
-from accounts.models import Profile
-
-class UserListAPIView(ListAPIView):
-    serializer_class = UserListSerializer
-    queryset = User.objects.all()
 
 class UserCreateAPIView(CreateAPIView):
     serializer_class = UserCreateSerializer
@@ -72,7 +66,7 @@ def reset_password(request):
             'status_code':HTTP_404_NOT_FOUND
         }, status=HTTP_404_NOT_FOUND)
 
-    if not password:
+    if not password or len(password) < 6:
         return Response(data={
             'detail': 'invalid password',
             'status_code': HTTP_400_BAD_REQUEST

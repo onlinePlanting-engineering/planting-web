@@ -4,14 +4,27 @@ import re
 from accounts.models import Profile
 
 from rest_framework.serializers import (
-ModelSerializer,
-ValidationError,
-CharField,
+    ModelSerializer,
+    ValidationError,
+    CharField,
+    IntegerField,
+    ChoiceField
 )
+from django_filters.rest_framework import filters
 
 User = get_user_model()
 
+def phone_number(value):
+    pattern = re.compile(r'^1[34578]\d{9}$')
+
+    if not pattern.match(value):
+        raise ValidationError('Not a valid phone number.')
+
 class ProfileSerializer(ModelSerializer):
+    gender = ChoiceField(
+        choices=[0,1,2,3],
+        style={'base_template': 'radio.html'}
+    )
     class Meta:
         fields = [
             'nickname',
@@ -21,21 +34,17 @@ class ProfileSerializer(ModelSerializer):
         ]
         model = Profile
 
-class UserListSerializer(ModelSerializer):
-    class Meta:
-        model = User
-        fields = [
-            'username',
-            'email',
-        ]
-
-
 
 class UserSerializer(ModelSerializer):
     profile = ProfileSerializer()
+    username = CharField(max_length=24, min_length=8, validators=[phone_number])
     class Meta:
         model = User
         fields = ('id', 'username', 'profile')
+
+        filter_backends = (filters.OrderingFilter)
+        ordering_fields = ('id')
+        ordering = ('-id')
 
     def update(self, instance, validated_data):
         profile_data = validated_data.pop('profile')
@@ -55,6 +64,8 @@ class UserSerializer(ModelSerializer):
         return instance
 
 class UserCreateSerializer(ModelSerializer):
+    username = CharField(max_length=24, min_length=8, validators=[phone_number])
+    password = CharField(min_length=6)
     class Meta:
         model = User
         fields = [
@@ -69,13 +80,6 @@ class UserCreateSerializer(ModelSerializer):
                 }
         }
 
-    def validate(self, data):
-        username = data.get('username')
-        pattern = re.compile(r'^1[34578]\d{9}$')
-
-        if not pattern.match(username):
-            raise ValidationError('Please input a valid phone number.')
-        return data
 
     def create(self, validated_data):
         username = validated_data['username']

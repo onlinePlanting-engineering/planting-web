@@ -57,11 +57,14 @@ class UserSerializer(ModelSerializer):
         profile.addr = profile_data.get('addr', profile.addr)
         profile.gender = profile_data.get('gender', profile.gender)
 
-        profile.img_heading = profile_data.get('img_heading', profile.img_heading)
+        img = profile_data.get('img_heading', None)
+        if img:
+            profile.img_heading = profile_data.get('img_heading', profile.img_heading)
 
         profile.save()
 
         return instance
+
 
 class UserCreateSerializer(ModelSerializer):
     username = CharField(max_length=24, min_length=8, validators=[phone_number])

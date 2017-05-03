@@ -22,7 +22,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     '''Customized account integrated with system users'''
     nickname = models.CharField(max_length=12, blank=True)
-    gender = models.PositiveSmallIntegerField(default=0)        #0-unknown, 1-male, 2-female, 3-others
+    gender = models.PositiveSmallIntegerField(default=0, blank=True)        #0-unknown, 1-male, 2-female, 3-others
     addr = models.CharField(max_length=128, blank=True)
     mobile = models.CharField(max_length=24, db_index=True, blank=True)
     is_deleted = models.BooleanField(default=False)

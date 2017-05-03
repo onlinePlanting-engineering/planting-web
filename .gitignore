@@ -7,3 +7,4 @@ env
 **/staticfiles
 **/*pyc
 planting/static/images/
+planting/static/media/

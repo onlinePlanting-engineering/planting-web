@@ -16,6 +16,7 @@ register_url = '{0}/api/users/register/'.format(base)
 
 get_auth_token_url = '{0}/api/users/get_auth_token/'.format(base)
 get_current_user_info_url = '{0}/api/users/user_info/'.format(base)
+user_info_url_pattern = '{0}/api/users/%s/'.format(base)
 
 print('--------- Try to get users without authentication ------------')
 response = requests.get(list_users)
@@ -50,5 +51,19 @@ print(response2.status_code)
 printJson(response2.json())
 
 print('------ Get current user infomatioin ----')
-response3 = requests.get(get_current_user_info_url, headers=headers2)
-print(response3.json())
+current_user_info = response3 = requests.get(get_current_user_info_url, headers=headers2).json()
+printJson(current_user_info)
+
+
+print('--------- Get current user profile ------')
+uid = current_user_info['data']['id']
+user_profile_url = user_info_url_pattern % (uid)
+user_profile = requests.get(user_profile_url, headers=headers2).json()
+printJson(user_profile)
+
+# print('-------- Update user profile --------')
+# headers2.update({'Content-Type': 'multipart/form-data'})
+# user_profile['profile']['img_heading'] = open('/Users/frankin/dev/fuzhiyong1.png', 'rb')
+# files = {'img_heading' : open('/Users/frankin/dev/fuzhiyong1.png', 'rb')}
+# response4 = requests.put(user_profile_url, data=user_profile, files=files, headers=headers2)
+# print(response4)

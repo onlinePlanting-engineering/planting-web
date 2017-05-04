@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'rest_framework_expiring_authtoken',
     'accounts',
     'farm',
+    'tinymce_4',
+    'grappelli',
+    'filebrowser',
 ]
 
 MIDDLEWARE = [

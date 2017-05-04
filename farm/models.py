@@ -2,6 +2,7 @@
 
 from django.db import models
 from uuid import uuid4
+from tinymce_4.fields import TinyMCEModelField
 
 def farm_image_storage_directory(instance, filename):
     ext = filename.split('.')[-1]
@@ -14,11 +15,11 @@ class Farm(models.Model):
     phone = models.CharField(max_length=16, blank=True)
     subject = models.CharField(max_length=128, blank=True)
     price = models.PositiveIntegerField(default=0)
-    desc = models.TextField(blank=True, null=True)                      # 农场详细描述
-    notice = models.TextField(max_length=1024, blank=True, null=True)   # 农场须知
     is_delete = models.BooleanField(default=False)
     created_date = models.DateField(auto_now_add=True)
     updated_date = models.DateField(auto_now=True)
+    notice = TinyMCEModelField(default="农场须知")   # 农场须知
+    content = TinyMCEModelField(default='农场介绍')
 
     def __str__(self):
         return '{id} - {name}'.format(id = self.id, name = self.name)

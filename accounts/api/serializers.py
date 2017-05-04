@@ -8,22 +8,28 @@ from rest_framework.serializers import (
     ValidationError,
     CharField,
     IntegerField,
-    ChoiceField
+    ChoiceField,
+    Serializer
 )
 from django_filters.rest_framework import filters
 
 User = get_user_model()
 
-def phone_number(value):
+def is_phone_number(value):
     pattern = re.compile(r'^1[34578]\d{9}$')
 
     if not pattern.match(value):
         raise ValidationError('Not a valid phone number.')
 
+def is_phone_number_exists(value):
+    qs = User.objects.filter(username=value)
+    if qs.exists():
+        raise ValidationError('The username has been registered')
+
 class ProfileSerializer(ModelSerializer):
     gender = ChoiceField(
         choices=[0,1,2,3],
-        style={'base_template': 'radio.html'}
+        style={'base_template': 'radio.html'}, allow_blank=True
     )
     class Meta:
         fields = [
@@ -37,7 +43,7 @@ class ProfileSerializer(ModelSerializer):
 
 class UserSerializer(ModelSerializer):
     profile = ProfileSerializer()
-    username = CharField(max_length=24, min_length=8, validators=[phone_number])
+    username = CharField(max_length=24, min_length=8, validators=[is_phone_number], allow_blank=True)
     class Meta:
         model = User
         fields = ('id', 'username', 'profile')
@@ -50,12 +56,33 @@ class UserSerializer(ModelSerializer):
         profile_data = validated_data.pop('profile')
         profile = instance.profile
 
-        instance.username = validated_data.get('username', instance.username)
-        instance.save()
+        # if the updated username is not the same as the current username,
+        # check if the updated username is '', if is '', do nothing
+        # if the username set to some value and not equal to current value,
+        # need to verify if the updated username is valid.
+        # please use /api/users/change_username/ to update username
+        # username = validated_data.get('username', None)
+        # if username and username != instance.username:
+        #     qs = User.objects.filter(username=username)
+        #     if qs.exists():
+        #         raise ValidationError('The username has been registered by others.')
+        #     instance.username = username
+        #     instance.save()
 
-        profile.nickname = profile_data.get('nickname', profile.nickname)
-        profile.addr = profile_data.get('addr', profile.addr)
-        profile.gender = profile_data.get('gender', profile.gender)
+        nickname = profile_data.get('nickname')
+        if not nickname:
+            nickname = profile.nickname
+        profile.nickname = nickname
+
+        addr = profile_data.get('addr')
+        if not addr:
+            addr = profile.addr
+        profile.addr = addr
+
+        gender = profile_data.get('gender')
+        if not gender:
+            gender = profile.gender
+        profile.gender = gender
 
         img = profile_data.get('img_heading', None)
         if img:
@@ -65,10 +92,10 @@ class UserSerializer(ModelSerializer):
 
         return instance
 
-
 class UserCreateSerializer(ModelSerializer):
-    username = CharField(max_length=24, min_length=8, validators=[phone_number])
+    username = CharField(max_length=24, min_length=8, validators=[is_phone_number, is_phone_number_exists])
     password = CharField(min_length=6)
+
     class Meta:
         model = User
         fields = [
@@ -131,3 +158,9 @@ class UserLoginSerializer(ModelSerializer):
         data['username'] = user_obj.username
         data['token'] = Token.objects.get(user=user_obj)
         return data
+
+class ChangeUsernameSerializer(Serializer):
+    """
+    Serializer for username change endpoint
+    """
+    username = CharField(max_length=24, min_length=8, validators=[is_phone_number])

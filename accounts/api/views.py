@@ -58,14 +58,15 @@ class UserCreateAPIView(CreateAPIView):
             'status_code': status.HTTP_400_BAD_REQUEST
         }, status=status.HTTP_400_BAD_REQUEST)
 
-
-
 class UserLogoutAPIView(APIView):
     queryset = User.objects.all()
     permission_classes = [AllowAny]
     def get(self, request, format=None):
         logout(request)
-        return Response(status=HTTP_200_OK)
+        return Response(data={
+            'data': 'Logout success',
+            'status_code': status.HTTP_200_OK
+        },status=HTTP_200_OK)
 
 @api_view(['PUT'])
 @permission_classes((AllowAny, ))
@@ -163,7 +164,6 @@ class UserViewSet(viewsets.ModelViewSet):
             'detail': serializer.errors,
             'status_code': HTTP_400_BAD_REQUEST
         }, status=HTTP_400_BAD_REQUEST)
-
 
 class ChangeUsernameView(UpdateAPIView):
     """

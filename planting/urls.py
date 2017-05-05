@@ -30,6 +30,7 @@ urlpatterns = [
     ])),
     url(r'^api/users/', include('accounts.api.urls', namespace='accounts-api')),
     url(r'^api/auth/token/', obtain_jwt_token),
+    url(r'^docs/', include('rest_framework_docs.urls')),
 ]
 
 if settings.DEBUG is True:

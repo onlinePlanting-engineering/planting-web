@@ -25,6 +25,8 @@ class Profile(models.Model):
     gender = models.PositiveSmallIntegerField(default=0, blank=True)        #0-unknown, 1-male, 2-female, 3-others
     addr = models.CharField(max_length=128, blank=True)
     mobile = models.CharField(max_length=24, db_index=True, blank=True)
+    qq = models.CharField(max_length=16, blank=True)
+    weixin = models.CharField(max_length=16, blank=True)
     is_deleted = models.BooleanField(default=False)
     is_email_verified = models.BooleanField(default=False)
     is_phone_verified = models.BooleanField(default=False)

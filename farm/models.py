@@ -3,6 +3,9 @@
 from django.db import models
 from uuid import uuid4
 from tinymce_4.fields import TinyMCEModelField
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 def farm_image_storage_directory(instance, filename):
     ext = filename.split('.')[-1]
@@ -10,6 +13,7 @@ def farm_image_storage_directory(instance, filename):
 
 class Farm(models.Model):
     id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=24, unique=True)
     addr = models.CharField(max_length=64, blank=True)
     phone = models.CharField(max_length=16, blank=True)
@@ -23,6 +27,13 @@ class Farm(models.Model):
 
     def __str__(self):
         return '{id} - {name}'.format(id = self.id, name = self.name)
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if self.user is None:
+            self.user = User.objects.get(id=1)
+        super(Farm, self).save(force_insert=False, force_update=False, using=None,
+             update_fields=None)
 
 class FarmImage(models.Model):
     farm = models.ForeignKey(Farm, related_name='images')

@@ -9,16 +9,16 @@ from farm.models import Farm, FarmImage
 from .serializers import FarmSerializer, FarmImageSerializer
 
 
-class FarmViewSet(viewsets.ModelViewSet):
+class FarmViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    This viewset automatically profides `list`, `retrieve`, actions.
+    This API just provide list and get specific farm information
     """
     queryset = Farm.objects.all()
     serializer_class = FarmSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
 
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+    # def perform_create(self, serializer):
+    #     serializer.save(owner=self.request.user)
 
     @decorators.detail_route(renderer_classes=[renderers.StaticHTMLRenderer])
     def notice(self, request, *args, **kwargs):
@@ -46,7 +46,7 @@ class FarmViewSet(viewsets.ModelViewSet):
             'status_code': status.HTTP_200_OK
         }, status=status.HTTP_200_OK)
 
-class FarmImageViewSet(viewsets.ModelViewSet):
+class FarmImageViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = FarmImage.objects.all()
     serializer_class = FarmImageSerializer
     # permission_classes = (permissions.IsAuthenticatedOrReadOnly)

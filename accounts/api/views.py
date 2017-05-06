@@ -14,12 +14,8 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import viewsets
 
-from rest_framework.generics import (
-    CreateAPIView,
-    ListAPIView,
-    UpdateAPIView,
-    RetrieveUpdateDestroyAPIView
-)
+from rest_framework import generics, mixins
+
 from rest_framework.permissions import (
     AllowAny,
     IsAuthenticated
@@ -38,7 +34,7 @@ from .serializers import (
 
 from accounts.models import Profile
 
-class UserCreateAPIView(CreateAPIView):
+class UserCreateAPIView(generics.CreateAPIView):
     serializer_class = UserCreateSerializer
     queryset = User.objects.all()
     permission_classes = [AllowAny]
@@ -131,13 +127,14 @@ class UserViewSet(viewsets.ModelViewSet):
             'status_code': HTTP_400_BAD_REQUEST
         }, status=HTTP_400_BAD_REQUEST)
 
-class ProfileViewSet(viewsets.ModelViewSet):
+
+class ProfileViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
+                     mixins.UpdateModelMixin, viewsets.GenericViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = (IsOwnerOrReadOnly, permissions.IsAuthenticatedOrReadOnly)
 
-    @list_route()
-    def list_profiles(self, request):
+    def list(self, request, *args, **kwargs):
         profiles = Profile.objects.all().order_by('-id')
         serializer = self.get_serializer(profiles, many=True)
         return Response({
@@ -169,7 +166,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
             'status_code': HTTP_400_BAD_REQUEST
         }, status=HTTP_400_BAD_REQUEST)
 
-class ChangeUsernameView(UpdateAPIView):
+class ChangeUsernameView(generics.UpdateAPIView):
     """
     Endpoint for changing phone number
     """
@@ -218,7 +215,7 @@ class ChangeUsernameView(UpdateAPIView):
             'status_code': HTTP_400_BAD_REQUEST
         }, status=HTTP_400_BAD_REQUEST)
 
-class ResetPasswordView(UpdateAPIView):
+class ResetPasswordView(generics.UpdateAPIView):
     """
     Endpoint for reseting password
     """

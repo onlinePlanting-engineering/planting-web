@@ -11,8 +11,7 @@ from .serializers import FarmSerializer, FarmImageSerializer
 
 class FarmViewSet(viewsets.ModelViewSet):
     """
-    This viewset automatically profides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
+    This viewset automatically profides `list`, `retrieve`, actions.
     """
     queryset = Farm.objects.all()
     serializer_class = FarmSerializer
@@ -31,8 +30,23 @@ class FarmViewSet(viewsets.ModelViewSet):
         farm = self.get_object()
         return Response(farm.content)
 
+    def list(self, request, *args, **kwargs):
+        farms = Farm.objects.all().order_by('-id')
+        serializer = self.get_serializer(farms, many=True)
+        return Response({
+            'data': serializer.data,
+            'status_code': status.HTTP_200_OK
+        }, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response({
+            'data': serializer.data,
+            'status_code': status.HTTP_200_OK
+        }, status=status.HTTP_200_OK)
+
 class FarmImageViewSet(viewsets.ModelViewSet):
     queryset = FarmImage.objects.all()
     serializer_class = FarmImageSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
-
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly)

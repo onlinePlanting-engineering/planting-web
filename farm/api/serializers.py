@@ -16,11 +16,10 @@ class FarmSerializer(serializers.ModelSerializer):
         fields = ('url', 'id', 'name', 'owner', 'price', 'subject',
                   'is_delete', 'notice', 'content', 'images')
 
-
 class FarmImageSerializer(serializers.ModelSerializer):
     # Create a custom method field, that list farms belong to current user
     farm = UserFilteredPrimaryKeyRelatedField(queryset=Farm.objects, source='farm.name')
 
     class Meta:
         model = FarmImage
-        fields = ('id', 'url', 'image', 'flags', 'farm')
+        fields = ('id', 'url', 'farm', 'image', 'flags', 'is_delete')

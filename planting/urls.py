@@ -20,6 +20,9 @@ from django.conf import settings
 from django.conf.urls.static import static, serve
 from rest_framework.routers import DefaultRouter
 from filebrowser.sites import site as fb_site
+from rest_framework_swagger.views import get_swagger_view
+
+schema_view = get_swagger_view(title='Planting Web API')
 
 from rest_framework_jwt.views import obtain_jwt_token
 
@@ -32,6 +35,7 @@ router.register(r'farmimages', FarmImageViewSet)
 router.register(r'profiles', ProfileViewSet)
 
 urlpatterns = [
+    url(r'^docs/', schema_view),
     url(r'^api/', include(router.urls)),
     url(r'^admin/', include([
         url(r'^', include(admin.site.urls)),
@@ -39,7 +43,7 @@ urlpatterns = [
     ])),
     url(r'^api/users/', include('accounts.api.urls', namespace='accounts-api')),
     url(r'^api/auth/token/', obtain_jwt_token),
-    url(r'^docs/', include('rest_framework_docs.urls')),
+    # url(r'^docs/', include('rest_framework_docs.urls')),
 ]
 
 if settings.DEBUG is True:

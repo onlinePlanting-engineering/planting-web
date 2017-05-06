@@ -47,7 +47,9 @@ INSTALLED_APPS = [
     'tinymce_4',
     'grappelli',
     'filebrowser',
-    'rest_framework_docs',
+    # 'rest_framework_docs',
+    # 'drf_autodocs',
+    'rest_framework_swagger'
 ]
 
 MIDDLEWARE = [

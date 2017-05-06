@@ -3,17 +3,28 @@ from rest_framework.authtoken.models import Token
 import re
 from accounts.models import Profile
 
+from rest_framework import serializers
+
 from rest_framework.serializers import (
     ModelSerializer,
     ValidationError,
     CharField,
     IntegerField,
     ChoiceField,
-    Serializer
+    Serializer,
+    PrimaryKeyRelatedField
 )
 from django_filters.rest_framework import filters
 
 User = get_user_model()
+
+class UserFilteredPrimaryKeyRelatedField(PrimaryKeyRelatedField):
+    def get_queryset(self):
+        request = self.context.get('request', None)
+        queryset = super(UserFilteredPrimaryKeyRelatedField, self).get_queryset()
+        if not request or not queryset:
+            return None
+        return queryset.filter(owner=request.user)
 
 def is_phone_number(value):
     pattern = re.compile(r'^1[34578]\d{9}$')
@@ -27,19 +38,18 @@ def is_phone_number_exists(value):
         raise ValidationError('The username has been registered')
 
 class ProfileSerializer(ModelSerializer):
-    gender = ChoiceField(
-        choices=[0,1,2,3],
-        style={'base_template': 'radio.html'}, allow_blank=True
-    )
+    owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         fields = [
+            'id',
+            'url',
+            'owner',
             'nickname',
             'gender',
             'addr',
             'img_heading'
         ]
         model = Profile
-
 
 class UserSerializer(ModelSerializer):
     profile = ProfileSerializer()
@@ -164,3 +174,19 @@ class ChangeUsernameSerializer(Serializer):
     Serializer for username change endpoint
     """
     username = CharField(max_length=24, min_length=8, validators=[is_phone_number])
+
+class ResetPasswordSerializer(ModelSerializer):
+    """
+    Serializer for reset password for specific user
+    """
+    username = CharField(max_length=24, min_length=8, validators=[is_phone_number])
+    password = CharField(min_length=6)
+
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+
+    def update(self, instance, validated_data):
+        instance.set_password(validated_data['password'])
+        instance.save()
+        return instance

@@ -9,7 +9,7 @@ from rest_framework.status import (
     HTTP_405_METHOD_NOT_ALLOWED,
     HTTP_404_NOT_FOUND
 )
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import viewsets
@@ -31,8 +31,12 @@ User = get_user_model()
 from .serializers import (
     UserCreateSerializer,
     UserSerializer,
-    ChangeUsernameSerializer
+    ChangeUsernameSerializer,
+    ResetPasswordSerializer,
+    ProfileSerializer
 )
+
+from accounts.models import Profile
 
 class UserCreateAPIView(CreateAPIView):
     serializer_class = UserCreateSerializer
@@ -67,44 +71,6 @@ class UserLogoutAPIView(APIView):
             'data': 'Logout success',
             'status_code': status.HTTP_200_OK
         },status=HTTP_200_OK)
-
-@api_view(['PUT'])
-@permission_classes((AllowAny, ))
-def reset_password(request):
-    if request.method != 'PUT':
-        return Response(data={
-            'detail':'please use PUT http method',
-            'status_code': HTTP_405_METHOD_NOT_ALLOWED
-        })
-
-    user_obj = None
-
-    username = request.data.get('username', None)
-    password = request.data.get('password', None)
-
-    if username:
-        qs = User.objects.filter(username=username)
-        if qs.exists and qs.count() == 1:
-            user_obj = qs.first()
-
-    if not user_obj:
-        return Response(data={
-            'detail':'phone number not found',
-            'status_code':HTTP_404_NOT_FOUND
-        }, status=HTTP_404_NOT_FOUND)
-
-    if not password or len(password) < 6:
-        return Response(data={
-            'detail': 'invalid password',
-            'status_code': HTTP_400_BAD_REQUEST
-        }, status=HTTP_400_BAD_REQUEST)
-
-    user_obj.set_password(password)
-    user_obj.save()
-    return Response(data={
-        'detail': 'password update succeed',
-        'status_code': HTTP_200_OK
-    }, status=HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes((IsOwnerOrReadOnly, IsAuthenticated))
@@ -144,6 +110,44 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_user_info(self, request, pk=None):
         user = self.get_object()
         serializer = self.get_serializer(user)
+        return Response({
+            'data': serializer.data,
+            'status_code': HTTP_200_OK
+        }, status=HTTP_200_OK)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        data = request.data
+        serializer = self.get_serializer(instance, data=data, partial=partial)
+        if serializer.is_valid():
+            self.perform_update(serializer)
+            return Response({
+                'data': serializer.data,
+                'status_code': HTTP_200_OK
+            }, status=HTTP_200_OK)
+        return Response(data={
+            'detail': serializer.errors,
+            'status_code': HTTP_400_BAD_REQUEST
+        }, status=HTTP_400_BAD_REQUEST)
+
+class ProfileViewSet(viewsets.ModelViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = (IsOwnerOrReadOnly, permissions.IsAuthenticatedOrReadOnly)
+
+    @list_route()
+    def list_profiles(self, request):
+        profiles = Profile.objects.all().order_by('-id')
+        serializer = self.get_serializer(profiles, many=True)
+        return Response({
+            'data': serializer.data,
+            'status_code': HTTP_200_OK
+        }, status=HTTP_200_OK)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
         return Response({
             'data': serializer.data,
             'status_code': HTTP_200_OK
@@ -213,3 +217,39 @@ class ChangeUsernameView(UpdateAPIView):
             'detail': serializer.errors,
             'status_code': HTTP_400_BAD_REQUEST
         }, status=HTTP_400_BAD_REQUEST)
+
+class ResetPasswordView(UpdateAPIView):
+    """
+    Endpoint for reseting password
+    """
+    serializer_class = ResetPasswordSerializer
+
+    def get_object(self):
+        qs = User.objects.filter(username=self.request.data['username'])
+        if not qs.exists():
+            return None
+        return qs.first()
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('protial', False)
+        data = request.data
+        instance = self.get_object()
+        if not instance:
+            return Response(data={
+                'detail': 'The phone number not found',
+                'status_code': status.HTTP_404_NOT_FOUND
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = self.get_serializer(instance, data = self.request.data, partial=partial)
+
+        if serializer.is_valid():
+            self.perform_update(serializer)
+            return Response(data={
+                'data': 'password has been changed',
+                'status_code': status.HTTP_200_OK
+            }, status=status.HTTP_200_OK)
+
+        return Response(data={
+            'detail': serializer.errors,
+            'status_code': status.HTTP_400_BAD_REQUEST
+        }, status=status.HTTP_400_BAD_REQUEST)

@@ -18,12 +18,21 @@ from django.contrib import admin
 admin.autodiscover()
 from django.conf import settings
 from django.conf.urls.static import static, serve
+from rest_framework.routers import DefaultRouter
 from filebrowser.sites import site as fb_site
 
 from rest_framework_jwt.views import obtain_jwt_token
 
+from farm.api.views import FarmViewSet, FarmImageViewSet
+from accounts.api.views import ProfileViewSet
+
+router = DefaultRouter()
+router.register(r'farms', FarmViewSet)
+router.register(r'farmimages', FarmImageViewSet)
+router.register(r'profiles', ProfileViewSet)
+
 urlpatterns = [
-    # url(r'^admin/', admin.site.urls),
+    url(r'^api/', include(router.urls)),
     url(r'^admin/', include([
         url(r'^', include(admin.site.urls)),
         url(r'^filebrowser/', include(fb_site.urls))

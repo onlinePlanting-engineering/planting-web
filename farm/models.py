@@ -13,7 +13,7 @@ def farm_image_storage_directory(instance, filename):
 
 class Farm(models.Model):
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=24, unique=True)
     addr = models.CharField(max_length=64, blank=True)
     phone = models.CharField(max_length=16, blank=True)
@@ -30,8 +30,8 @@ class Farm(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
-        if self.user is None:
-            self.user = User.objects.get(id=1)
+        if self.owner is None:
+            self.owner = User.objects.get(id=1)
         super(Farm, self).save(force_insert=False, force_update=False, using=None,
              update_fields=None)
 

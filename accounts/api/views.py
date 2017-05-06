@@ -78,7 +78,7 @@ def get_current_user_info(request):
 
     user_info = request.user
 
-    serializer = UserSerializer(user_info)
+    serializer = UserSerializer(user_info, context={'request': request})
 
     return Response(data={
         'status_code' : HTTP_200_OK,

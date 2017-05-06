@@ -49,4 +49,4 @@ class FarmViewSet(viewsets.ModelViewSet):
 class FarmImageViewSet(viewsets.ModelViewSet):
     queryset = FarmImage.objects.all()
     serializer_class = FarmImageSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly)
+    # permission_classes = (permissions.IsAuthenticatedOrReadOnly)

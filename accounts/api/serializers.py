@@ -51,6 +51,28 @@ class ProfileSerializer(ModelSerializer):
         ]
         model = Profile
 
+    def update(self, instance, validated_data):
+        nickname = validated_data.get('nickname', None)
+        gender = validated_data.get('gender', None)
+        addr = validated_data.get('addr', None)
+        img_heading = validated_data.get('img_heading', None)
+
+        if not nickname:
+            nickname = instance.nickname
+        if not gender:
+            gender = instance.gender
+        if not addr:
+            addr = instance.addr
+        if img_heading:
+            instance.img_heading = img_heading
+
+        instance.nickname = nickname
+        instance.gender = gender
+        instance.addr = addr
+        instance.save()
+
+        return  instance
+
 class UserSerializer(ModelSerializer):
     profile = ProfileSerializer()
     username = CharField(max_length=24, min_length=8, validators=[is_phone_number], allow_blank=True)

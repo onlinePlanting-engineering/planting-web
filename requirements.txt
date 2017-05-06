@@ -1,3 +1,4 @@
+addict==2.1.0
 appdirs==1.4.3
 click==6.7
 coreapi==2.3.0
@@ -13,9 +14,12 @@ django-grappelli==2.8.3
 djangorestframework==3.4.6
 djangorestframework-expiring-authtoken==0.1.4
 djangorestframework-jwt==1.10.0
+drf-autodocs==0.4.3
+drfdocs==0.0.11
 gunicorn==19.7.1
 itypes==1.1.0
 Jinja2==2.9.6
+Markdown==2.6.8
 MarkupSafe==1.0
 oauthlib==2.0.2
 olefile==0.44

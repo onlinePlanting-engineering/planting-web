@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'accounts',
     'farm',
     'lands',
+    'seeds',
     'tinymce_4',
     'grappelli',
     'filebrowser',

@@ -9,7 +9,7 @@ from tinymce_4.fields import TinyMCEModelField
 User = get_user_model()
 
 class Land(models.Model):
-    farm = models.ForeignKey(Farm, on_delete=models.CASCADE)
+    farm = models.ForeignKey(Farm, on_delete=models.CASCADE, related_name='lands')
     cat = models.BooleanField(default=False)            #是否有棚
     num = models.PositiveSmallIntegerField(default=0)
     name = models.CharField(max_length=16, null=True, blank=True)
@@ -29,7 +29,7 @@ class Land(models.Model):
             format(farm_name=self.farm.name, cat=self.cat, num=self.num)
 
 class Meta(models.Model):
-    land = models.ForeignKey(Land, on_delete=models.CASCADE)
+    land = models.ForeignKey(Land, on_delete=models.CASCADE, related_name='metas')
     owner = models.ForeignKey(User)
     num = models.CharField(max_length=12, blank=True, null=True)
     is_rented = models.BooleanField(default=False)

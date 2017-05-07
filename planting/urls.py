@@ -28,11 +28,15 @@ from rest_framework_jwt.views import obtain_jwt_token
 
 from farm.api.views import FarmViewSet, FarmImageViewSet
 from accounts.api.views import ProfileViewSet
+from lands.api.views import LandViewSet, MetaViewSet, MetaImageViewSet
 
 router = DefaultRouter()
 router.register(r'farms', FarmViewSet)
 router.register(r'farmimages', FarmImageViewSet)
 router.register(r'profiles', ProfileViewSet)
+router.register(r'lands', LandViewSet)
+router.register(r'metas', MetaViewSet)
+router.register(r'metaimages', MetaImageViewSet)
 
 urlpatterns = [
     url(r'^docs/', schema_view),

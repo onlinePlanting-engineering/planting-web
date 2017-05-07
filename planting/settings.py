@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework_expiring_authtoken',
     'accounts',
     'farm',
+    'lands',
     'tinymce_4',
     'grappelli',
     'filebrowser',

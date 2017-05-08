@@ -22,7 +22,7 @@ class FarmSerializer(serializers.ModelSerializer):
     content = serializers.HyperlinkedIdentityField(view_name='farm-content', format='html')
 
     class Meta:
-        fields = ('url', 'id', 'name', 'owner', 'price', 'subject',
+        fields = ('url', 'id', 'name', 'owner', 'addr', 'price', 'subject',
                   'is_delete', 'notice', 'content', 'images')
 
         model = Farm

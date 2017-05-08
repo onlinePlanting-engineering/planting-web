@@ -42,16 +42,18 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_expiring_authtoken',
-    'accounts',
-    'farm',
-    'lands',
-    'seeds',
     'tinymce_4',
     'grappelli',
     'filebrowser',
     # 'rest_framework_docs',
     # 'drf_autodocs',
-    'rest_framework_swagger'
+    'rest_framework_swagger',
+    'accounts',
+    'farm',
+    'lands',
+    'seeds',
+    'comments'
+
 ]
 
 MIDDLEWARE = [

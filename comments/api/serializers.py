@@ -88,7 +88,6 @@ class CommentChildSerializer(serializers.ModelSerializer):
 class CommentDetailSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     reply_count = serializers.SerializerMethodField()
-    content_object_url = serializers.SerializerMethodField()
     replies = serializers.SerializerMethodField()
 
     class Meta:
@@ -100,19 +99,12 @@ class CommentDetailSerializer(serializers.ModelSerializer):
             'replies',
             'reply_count',
             'timestamp',
-            'content_object_url',
         ]
 
         read_only_fields = [
             'reply_count',
             'replies',
         ]
-
-    def get_content_object_url(self, obj):
-        try:
-            return obj.content_object.get_api_url()
-        except:
-            return None
 
     def get_replies(self, obj):
         if obj.is_parent:

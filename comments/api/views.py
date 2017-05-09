@@ -4,6 +4,7 @@ from rest_framework import (
     generics, mixins,
     permissions
 )
+from rest_framework.response import Response
 from comments.models import Comment
 from .serializers import (
     CommentListSerializer,
@@ -11,6 +12,7 @@ from .serializers import (
     CommentChildSerializer,
     create_comment_serializer
 )
+from .pagination import CommentLimitOffsetPagination, CommentPageNumberPagination
 from accounts.permissions import IsOwnerOrReadOnly
 
 class CommentCreateAPIView(generics.CreateAPIView):
@@ -33,19 +35,51 @@ class CommentDetailAPIView(mixins.DestroyModelMixin, mixins.UpdateModelMixin,
     serializer_class = CommentDetailSerializer
     permission_class = [IsOwnerOrReadOnly]
 
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(data={
+            'data': serializer.data,
+            'status_code': status.HTTP_200_OK
+        }, status=status.HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(data={
+            'data': 'Deleted',
+            'status_code': status.HTTP_204_NO_CONTENT
+        }, status=status.HTTP_204_NO_CONTENT)
+
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(data={
+            'data': serializer.data,
+            'status_code': status.HTTP_200_OK
+        }, status=status.HTTP_200_OK)
+
 class CommentListAPIView(generics.ListAPIView):
     serializer_class = CommentListSerializer
     permission_classes = [permissions.AllowAny, ]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['content', 'user__name']
-    # pagination_class =
-    queryset = Comment.objects.all()
+    pagination_class = CommentPageNumberPagination
 
     def get_queryset(self, *args, **kwargs):
         queryset_list = Comment.objects.filter(id__gte=0)
@@ -53,6 +87,20 @@ class CommentListAPIView(generics.ListAPIView):
         if query:
             queryset_list = queryset_list.filter(
                 Q(content__icontains = query)|
-                Q(user__name__icontains=query)
+                Q(user__username__icontains=query)
             ).distinct()
         return queryset_list
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(data={
+            'data': serializer.data,
+            'status_code': status.HTTP_200_OK
+        }, status=status.HTTP_200_OK)

@@ -31,6 +31,7 @@ from accounts.api.views import ProfileViewSet
 from lands.api.views import LandViewSet, MetaViewSet, MetaImageViewSet
 from seeds.api.views import CategoryViewSet, VegetableViewSet, VegMetaViewSet, VegMetaImageViewSet
 
+
 router = DefaultRouter()
 router.register(r'farms', FarmViewSet)
 router.register(r'farmimages', FarmImageViewSet)
@@ -44,9 +45,14 @@ router.register(r'seed/vegetables', VegetableViewSet)
 router.register(r'seed/vegmetas', VegMetaViewSet)
 router.register(r'seed/vegmetaimages', VegMetaImageViewSet)
 
+# router.register(r'comment/list', CommentListAPIView)
+# router.register(r'comment/create', CommentCreateAPIView)
+# router.register(r'comment/detail', CommentDetailAPIView)
+
 urlpatterns = [
     url(r'^docs/', schema_view),
     url(r'^api/', include(router.urls)),
+    url(r'^api/comments/', include("comments.api.urls", namespace='comments-api')),
     url(r'^admin/', include([
         url(r'^', include(admin.site.urls)),
         url(r'^filebrowser/', include(fb_site.urls))

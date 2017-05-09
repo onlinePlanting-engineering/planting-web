@@ -19,17 +19,17 @@ class CommentManager(models.Manager):
             filter(parent=None)
         return qs
 
-    def create_by_model_type(self, model_type, slug, content, user, parent_obj=None):
+    def create_by_model_type(self, model_type, id, content, user, parent_obj=None):
         model_qs = ContentType.objects.filter(model=model_type)
         if model_qs.exists():
             SomeModel = model_qs.first().model_class()
-            obj_qs = SomeModel.objects.filter(slug=slug)
+            obj_qs = SomeModel.objects.filter(pk=id)
             if obj_qs.exists() and obj_qs.count() == 1:
                 instance = self.model()
                 instance.content = content
                 instance.user = user
                 instance.content_type = model_qs.first()
-                instance.object_id = obj_qs.first(),id
+                instance.object_id = obj_qs.first().id
                 if parent_obj:
                     instance.parent = parent_obj
                 instance.save()
@@ -61,6 +61,9 @@ class Comment(models.Model):
 
     def get_delete_url(self):
         return reverse('comments:delete', kwargs={'id':self.id})
+
+    def children(self): # replies
+        return Comment.objects.filter(parent=self)
 
     @property
     def is_parent(self):

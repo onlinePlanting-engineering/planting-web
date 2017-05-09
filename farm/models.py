@@ -4,6 +4,7 @@ from django.db import models
 from uuid import uuid4
 from tinymce_4.fields import TinyMCEModelField
 from django.contrib.auth import get_user_model
+from comments.models import Comment
 
 User = get_user_model()
 
@@ -35,6 +36,12 @@ class Farm(models.Model):
             self.owner = User.objects.get(id=1)
         super(Farm, self).save(force_insert=False, force_update=False, using=None,
              update_fields=None)
+
+    @property
+    def comments(self):
+        instance = self
+        qs = Comment.objects.filter_by_instance(instance)
+        return qs
 
 class FarmImage(models.Model):
     FLAG_CHOICES = (

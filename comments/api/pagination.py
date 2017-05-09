@@ -8,4 +8,4 @@ class CommentLimitOffsetPagination(LimitOffsetPagination):
     max_limit = 100
 
 class CommentPageNumberPagination(PageNumberPagination):
-    page_size = 2
+    page_size = 20

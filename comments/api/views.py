@@ -79,7 +79,7 @@ class CommentListAPIView(generics.ListAPIView):
     permission_classes = [permissions.AllowAny, ]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['content', 'user__name']
-    pagination_class = CommentPageNumberPagination
+    # pagination_class = CommentPageNumberPagination
 
     def get_queryset(self, *args, **kwargs):
         queryset_list = Comment.objects.filter(id__gte=0)

@@ -19,14 +19,15 @@ class CommentManager(models.Manager):
             filter(parent=None)
         return qs
 
-    def create_by_model_type(self, model_type, id, content, user, parent_obj=None):
+    def create_by_model_type(self, model_type, id, data, user, parent_obj=None):
         model_qs = ContentType.objects.filter(model=model_type)
         if model_qs.exists():
             SomeModel = model_qs.first().model_class()
             obj_qs = SomeModel.objects.filter(pk=id)
             if obj_qs.exists() and obj_qs.count() == 1:
                 instance = self.model()
-                instance.content = content
+                instance.content = data.get('content', '')
+                instance.grade = data.get('grade', 5)
                 instance.user = user
                 instance.content_type = model_qs.first()
                 instance.object_id = obj_qs.first().id
@@ -37,12 +38,21 @@ class CommentManager(models.Manager):
         return None
 
 class Comment(models.Model):
+    GRADE_CHOICES = (
+        (1, '*'),
+        (2, '**'),
+        (3, '***'),
+        (4, '****'),
+        (5, '*****'),
+    )
+
     user = models.ForeignKey(User, default=1)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     parent = models.ForeignKey('self', null=True, blank=True)
     content = models.TextField()
+    grade = models.PositiveSmallIntegerField(default=5, choices=GRADE_CHOICES)
     timestamp = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)

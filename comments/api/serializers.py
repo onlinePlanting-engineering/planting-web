@@ -71,7 +71,6 @@ class CommentListSerializer(serializers.ModelSerializer):
             'grade',
             'reply_count',
             'timestamp',
-            'content_type',
             'parent'
         ]
 

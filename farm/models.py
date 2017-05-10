@@ -19,7 +19,7 @@ class Farm(models.Model):
     addr = models.CharField(max_length=64, blank=True)
     phone = models.CharField(max_length=16, blank=True)
     subject = models.CharField(max_length=128, blank=True)
-    price = models.PositiveIntegerField(default=0)
+    price = models.DecimalField(default=2999)
     is_delete = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
     created_date = models.DateField(auto_now_add=True)

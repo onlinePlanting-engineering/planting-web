@@ -17,8 +17,8 @@ class Land(models.Model):
     is_active = models.BooleanField(default=False)      # 是否可用
     count = models.PositiveIntegerField(default=0)      # 切分数量
     item_size = models.PositiveIntegerField(default=33) # 每块大小
-    item_price = models.DecimalField(default=2999)        # 每块租金
-    unit_price = models.DecimalField(default=90.87)       # 每平米租金
+    item_price = models.DecimalField(default=2999, max_digits=10, decimal_places=2)        # 每块租金
+    unit_price = models.DecimalField(default=90.87, max_digits=10, decimal_places=2)       # 每平米租金
     created_date = models.DateField(auto_now_add=True)
     updated_date = models.DateField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
@@ -34,7 +34,7 @@ class Meta(models.Model):
     num = models.CharField(max_length=12, blank=True, null=True)
     is_rented = models.BooleanField(default=False)
     size = models.PositiveIntegerField(default=33)
-    price = models.DecimalField(default=2999.99)
+    price = models.DecimalField(default=2999.99, max_digits=10, decimal_places=2)
     is_active = models.BooleanField(default=False)
     created_date = models.DateField(auto_now_add=True)
     updated_date = models.DateField(auto_now=True)

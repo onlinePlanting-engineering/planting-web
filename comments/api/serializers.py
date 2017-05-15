@@ -105,7 +105,6 @@ class CommentDetailSerializer(serializers.ModelSerializer):
             'replies',
             'reply_count',
             'timestamp',
-            'content_type',
         ]
 
         read_only_fields = [
@@ -133,7 +132,7 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'user',
-            'content_type',
+            # 'content_type',
             'object_id',
             'parent',
             'content',

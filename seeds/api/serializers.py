@@ -5,7 +5,7 @@ class VegMetaImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VegMetaImage
-        fields = ('image', 'updated_date')
+        fields = ('img', 'updated_date')
 
 class VegMetaSerializer(serializers.ModelSerializer):
     images = VegMetaImageSerializer(many=True, read_only=True)

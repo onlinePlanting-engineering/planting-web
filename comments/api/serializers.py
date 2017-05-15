@@ -62,11 +62,13 @@ def create_comment_serializer(model_type='farm', id=None, parent_id=None, user=N
 class CommentListSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='comments-api:thread')
     reply_count = serializers.SerializerMethodField()
+    user = UserSerializer(read_only=True)
     class Meta:
         model = Comment
         fields = [
             'url',
             'id',
+            'user',
             'content',
             'grade',
             'reply_count',

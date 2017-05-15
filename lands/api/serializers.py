@@ -6,7 +6,7 @@ class MetaImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MetaImage
-        fields = ('image', 'created_date', 'meta')
+        fields = ('img', 'created_date', 'meta')
 
 class MetaSerializer(serializers.ModelSerializer):
     # images = serializers.HyperlinkedRelatedField(many=True, view_name='metaimage-detail', read_only=True)

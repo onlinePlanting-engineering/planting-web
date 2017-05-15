@@ -50,12 +50,12 @@ class FarmImage(models.Model):
         ('X', '未知未知'),
     )
     farm = models.ForeignKey(Farm, related_name='images')
-    image = models.ImageField(upload_to=farm_image_storage_directory)     # 农场图片
+    img = models.ImageField(upload_to=farm_image_storage_directory)     # 农场图片
     is_delete = models.BooleanField(default=False)
     created_date = models.DateField(auto_now_add=True)
     updated_date = models.DateField(auto_now=True)
     flags = models.CharField(max_length=1, default='X', db_index=True, choices=FLAG_CHOICES)   #  O-农场外图， I-农场内图， X-其他
 
     def __str__(self):
-        return '{farm} - {image}'.format(farm=self.farm.name, image=self.image.url)
+        return '{farm} - {image}'.format(farm=self.farm.name, image=self.img.url)
 

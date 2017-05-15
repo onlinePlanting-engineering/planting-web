@@ -49,11 +49,11 @@ class Meta(models.Model):
 
 class MetaImage(models.Model):
     meta = models.ForeignKey(Meta, related_name='images')
-    image = models.ImageField(upload_to=farm_image_storage_directory)     # 每周上传给用户看到图片
+    img = models.ImageField(upload_to=farm_image_storage_directory)     # 每周上传给用户看到图片
     is_delete = models.BooleanField(default=False)
     created_date = models.DateField(auto_now_add=True)
     updated_date = models.DateField(auto_now=True)
     flags = models.PositiveSmallIntegerField(default=0)
 
     def __str__(self):
-        return '{meta} - {image}'.format(meta=self.meta.num, image=self.image.url)
+        return '{meta} - {image}'.format(meta=self.meta.num, image=self.img.url)

@@ -13,7 +13,7 @@ class FarmImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FarmImage
-        fields = ('url', 'image', 'flags', 'is_delete')
+        fields = ('url', 'img', 'flags', 'is_delete')
 
 class FarmSerializer(serializers.ModelSerializer):
     # images = serializers.HyperlinkedRelatedField(many=True, view_name='farmimage-detail', read_only=True)
@@ -22,11 +22,11 @@ class FarmSerializer(serializers.ModelSerializer):
     notice = serializers.HyperlinkedIdentityField(view_name='farm-notice', format='html')
     content = serializers.HyperlinkedIdentityField(view_name='farm-content', format='html')
     # comments = serializers.HyperlinkedIdentityField(view_name='comment-list', format='html')
-    comments = serializers.SerializerMethodField()
+    # comments = serializers.SerializerMethodField()
 
     class Meta:
         fields = ('url', 'id', 'name', 'owner', 'price', 'subject',
-                  'is_delete', 'notice', 'content', 'images', 'comments')
+                  'is_delete', 'notice', 'content', 'images')
 
         model = Farm
 

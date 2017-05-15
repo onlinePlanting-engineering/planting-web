@@ -31,6 +31,8 @@ from accounts.api.views import ProfileViewSet
 from lands.api.views import LandViewSet, MetaViewSet, MetaImageViewSet
 from seeds.api.views import CategoryViewSet, VegetableViewSet, VegMetaViewSet, VegMetaImageViewSet
 
+from planting.views import IndexView
+
 
 router = DefaultRouter()
 router.register(r'farms', FarmViewSet)
@@ -50,6 +52,7 @@ router.register(r'seed/vegmetaimages', VegMetaImageViewSet)
 # router.register(r'comment/detail', CommentDetailAPIView)
 
 urlpatterns = [
+    url(r'^.*$', IndexView.as_view(), name='index'),
     url(r'^docs/', schema_view),
     url(r'^api/', include(router.urls)),
     url(r'^api/comments/', include("comments.api.urls", namespace='comments-api')),

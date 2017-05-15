@@ -84,6 +84,7 @@ class CommentListAPIView(generics.ListAPIView):
     def get_queryset(self, *args, **kwargs):
         queryset_list = Comment.objects.filter(id__gte=0)
         query = self.request.GET.get('q')
+
         if query:
             queryset_list = queryset_list.filter(
                 Q(content__icontains = query)|
@@ -92,7 +93,17 @@ class CommentListAPIView(generics.ListAPIView):
         return queryset_list
 
     def list(self, request, *args, **kwargs):
+        content_type = self.request.GET.get('type', None)
+        object_id = self.request.GET.get('id', None)
+
+        if not id or not content_type:
+            return Response(data={
+                'detail':'please specify content_type and content_id parameters. ex. ?content_type=farm&object_id=1',
+                'status_code': status.HTTP_400_BAD_REQUEST
+            }, status=status.HTTP_400_BAD_REQUEST)
+
         queryset = self.filter_queryset(self.get_queryset())
+        queryset = queryset.filter( Q(content_type__model__exact=content_type) & Q(object_id__exact=object_id) )
 
         page = self.paginate_queryset(queryset)
         if page is not None:

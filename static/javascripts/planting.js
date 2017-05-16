@@ -5,7 +5,8 @@
     'planting.config',
     'planting.routes',
     'planting.authentication',
-    'planting.layout'
+    'planting.layout',
+    'planting.utils'
   ]);
 
   angular.module('planting.config', []);

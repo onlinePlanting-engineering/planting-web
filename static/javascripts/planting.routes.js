@@ -17,7 +17,7 @@
     .when('/register', {
       controller: 'RegisterController',
       controllerAs: 'vm',
-      templateUrl: '/static/templates/layout/register.html'
+      templateUrl: '/static/templates/authentication/register.html'
     }).otherwise('/');
   }
 })();

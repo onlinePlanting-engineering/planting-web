@@ -14,6 +14,51 @@ import os
 import dj_database_url
 from datetime import timedelta
 
+DEVELOP_ENV=0
+STAGING_ENV=1
+PRODUCT_ENV=2
+
+
+DEPLOY_ENV=DEVELOP_ENV
+#DEPLOY_ENV=STAGING_ENV
+# DEPLOY_ENV=PRODUCT_ENV
+
+BIND_ADDR = '0.0.0.0:8000'
+
+if DEPLOY_ENV==PRODUCT_ENV:
+    DEBUG=False
+    SENTRY_DEBUG=False
+    MEDIA_ROOT = '/var/www/static/planting/'
+    STATICFILES_DIRS = ('/var/www/static/planting/')
+    # dynamically resize images
+    STATIC_URL = 'http://www.onlineplanting.com/s/'
+    # absolute static url
+    ABS_STATIC_URL = 'http://s.onlineplanting.com/'
+    SERVER_ADDR = 'www.onlineplanting.com'
+    # use secure cookie
+    SESSION_COOKIE_SECURE=True
+elif DEPLOY_ENV==STAGING_ENV:
+    DEBUG=True
+    SENTRY_DEBUG=True
+    PS_DB_HOST='127.0.0.1'
+    PS_DB_PORT=5432
+    MEDIA_ROOT = '/var/www/static/piclink/'
+    STATIC_URL = 'http://127.0.0.1:8000/s/'
+    ABS_STATIC_URL = 'http://s.onlineplanting.com'
+    STATICFILES_DIRS = ('/var/www/static/planting/')
+    SERVER_ADDR = '127.0.0.1:8000'
+else:
+    DEBUG = True
+    SENTRY_DEBUG = True
+    PS_DB_HOST = '127.0.0.1'
+    PS_DB_PORT = 5432
+    MEDIA_ROOT = '/var/www/static/piclink/'
+    STATIC_URL = 'http://127.0.0.1:8000/s/'
+    ABS_STATIC_URL = 'http://s.onlineplanting.com'
+    STATICFILES_DIRS = ('/var/www/static/planting/')
+    SERVER_ADDR = '127.0.0.1:8000'
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -25,7 +70,6 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = 'j8gwd0ravtb3tjs$wv3m7#4re(*ssqx6yc*t+u6*(5la-gylm('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 

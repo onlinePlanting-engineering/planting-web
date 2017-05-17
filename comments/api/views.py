@@ -98,7 +98,7 @@ class CommentListAPIView(generics.ListAPIView):
 
         if not id or not content_type:
             return Response(data={
-                'detail':'please specify content_type and content_id parameters. ex. ?content_type=farm&object_id=1',
+                'detail':'please specify content_type and content_id parameters. ex. ?type=farm&id=1',
                 'status_code': status.HTTP_400_BAD_REQUEST
             }, status=status.HTTP_400_BAD_REQUEST)
 

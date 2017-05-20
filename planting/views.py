@@ -3,7 +3,7 @@ from django.views.generic.base import TemplateView
 from django.utils.decorators import method_decorator
 
 class IndexView(TemplateView):
-    template_name = 'index.html'
+    template_name = 'angular-view.html'
 
     @method_decorator(ensure_csrf_cookie)
     def dispatch(self, request, *args, **kwargs):

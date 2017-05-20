@@ -51,8 +51,9 @@ router.register(r'seed/vegmetaimages', VegMetaImageViewSet)
 # router.register(r'comment/create', CommentCreateAPIView)
 # router.register(r'comment/detail', CommentDetailAPIView)
 
+
 urlpatterns = [
-    url(r'^.*$', IndexView.as_view(), name='index'),
+
     url(r'^docs/', schema_view),
     url(r'^api/', include(router.urls)),
     url(r'^api/comments/', include("comments.api.urls", namespace='comments-api')),
@@ -75,3 +76,8 @@ if settings.DEBUG:
         url(r'^static/(?P<path>.*)$', serve,
             {'document_root': settings.STATIC_ROOT}),
     ])
+
+# url entry for angular application
+urlpatterns.extend([
+    url(r'^.*$', IndexView.as_view(), name='index'),
+])

@@ -30,12 +30,12 @@ def is_phone_number(value):
     pattern = re.compile(r'^1[34578]\d{9}$')
 
     if not pattern.match(value):
-        raise ValidationError('Not a valid phone number.')
+        raise ValidationError('请输入正确的手机号')
 
 def is_phone_number_exists(value):
     qs = User.objects.filter(username=value)
     if qs.exists():
-        raise ValidationError('The username has been registered')
+        raise ValidationError('该手机号 {username} 已经被注册，请用其他手机号'.format(username=value))
 
 class ProfileSerializer(ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
@@ -76,6 +76,7 @@ class ProfileSerializer(ModelSerializer):
 class UserSerializer(ModelSerializer):
     profile = ProfileSerializer()
     username = CharField(max_length=24, min_length=8, validators=[is_phone_number], allow_blank=True)
+
     class Meta:
         model = User
         fields = ('id', 'username', 'profile')

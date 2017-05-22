@@ -11,30 +11,53 @@
     var Authentication = {
       register: register,
       login: login,
-      logout: logout
+      logout: logout,
+      unauthenticate: unauthenticate,
+      getAuthenticateAccount: getAuthenticateAccount,
+      isAuthenticated: isAuthenticated,
+      setAuthenticatedAccount: setAuthenticatedAccount
     };
 
     return Authentication;
 
+    function getAuthenticateAccount(){
+      if(!$cookies.get('authenticatedAccount')){
+        return;
+      }
+      return JSON.parse($cookies.get('authenticatedAccount'));
+    }
+
+    function isAuthenticated(){
+      return !!$cookies.get('authenticatedAccount');
+    }
+
+    function setAuthenticatedAccount(account){
+      $cookies.put('authenticatedAccount', JSON.stringify(account));
+    }
+
+    function unauthenticate(){
+      delete $cookies.remove('authenticatedAccount');
+    }
+
     function login(username, password){
-      return $http.post('/api/v1/auth/login/', {
+      return $http.post('/api/v1/accounts/login/', {
         username: username,
         password: password
       }).then(loginSuccessFn, loginErrorFn);
 
       function loginSuccessFn(data, status, headers, config){
-        Authentication.setAuthenticatedAccount(data.data);
+        Authentication.setAuthenticatedAccount(data.data.data);
 
-        windows.location = '/';
+        window.location = '/';
       }
 
       function loginErrorFn(data, status, headers, config){
-        console.log('Login failure!');
+        console.log('登入失败!', data.data);
       }
     }
 
     function logout(){
-      return $http.post('/api/v1/auth/logout/').then(
+      return $http.get('/api/v1/accounts/logout/').then(
         logoutSuccessFn, logoutErrorFn
       );
 
@@ -60,27 +83,10 @@
       }
 
       function registerErrorFn(data, status, headers, config){
-        console.log('Register failure!');
+        console.log('注册失败!', data.data);
       }
     }
 
-    function getAuthenticateAccount(){
-      if(!$cookies.authenticatedAccount){
-        return;
-      }
-      return JSON.parse($cookies.authenticatedAccount);
-    }
 
-    function isAuthenticated(){
-      return !!$cookies.authenticatedAccount;
-    }
-
-    function setAuthenticatedAccount(account){
-      $cookies.authenticatedAccount = JSON.stringify(account);
-    }
-
-    function unauthenticate(){
-      delete $cookies.authenticatedAccount;
-    }
   }
 })();

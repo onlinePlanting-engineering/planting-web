@@ -1,4 +1,9 @@
-from django.contrib.auth import get_user_model, logout
+from django.contrib.auth import (
+    get_user_model,
+    logout,
+    login,
+    authenticate,
+)
 from rest_framework.decorators import detail_route, list_route
 from django.shortcuts import get_object_or_404
 
@@ -15,6 +20,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import viewsets
 
 from rest_framework import generics, mixins
+
+import json
 
 from rest_framework.permissions import (
     AllowAny,
@@ -54,19 +61,61 @@ class UserCreateAPIView(generics.CreateAPIView):
             }, status=status.HTTP_201_CREATED, headers=headers)
 
         return Response(data={
-            'data': serializer.errors,
+            'message': serializer.errors,
             'status_code': status.HTTP_400_BAD_REQUEST
         }, status=status.HTTP_400_BAD_REQUEST)
 
-class UserLogoutAPIView(APIView):
-    queryset = User.objects.all()
+class LoginView(APIView):
     permission_classes = [AllowAny]
+    def post(self, request, format=None):
+        data = request.data
+        username = data.get('username')
+        password = data.get('password')
+
+        account = authenticate(username=username, password=password)
+
+        if account is not None:
+            if account.is_active:
+                login(request, account)
+
+                serialized = UserSerializer(account)
+
+                return Response(
+                    data={
+                        'data' : serialized.data,
+                        'status_code' : status.HTTP_200_OK
+                    },
+                    status=status.HTTP_200_OK
+                )
+            else:
+                return Response(
+                    data={
+                        'message': '该账号已注销，需要激活，请联系系统管理员。',
+                        'status':'Unauthorized',
+                        'status_code': status.HTTP_401_UNAUTHORIZED
+                    },
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
+        else:
+            return Response(
+                data={
+                    'message': '请输入正确的用户名/密码。',
+                    'status': 'Unauthorized',
+                    'status_code': status.HTTP_401_UNAUTHORIZED
+                },
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+
+class LogoutAPIView(APIView):
+    queryset = User.objects.all()
+    permission_classes = [IsAuthenticated]
     def get(self, request, format=None):
         logout(request)
         return Response(data={
             'data': 'Logout success',
-            'status_code': status.HTTP_200_OK
-        },status=HTTP_200_OK)
+            'status_code': status.HTTP_204_NO_CONTENT
+        },status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
 @permission_classes((IsOwnerOrReadOnly, IsAuthenticated))
@@ -84,6 +133,7 @@ def get_current_user_info(request):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    lookup_field = 'username'
 
     @list_route()
     def list_users(self, request):
@@ -126,7 +176,6 @@ class UserViewSet(viewsets.ModelViewSet):
             'detail': serializer.errors,
             'status_code': HTTP_400_BAD_REQUEST
         }, status=HTTP_400_BAD_REQUEST)
-
 
 class ProfileViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
                      mixins.UpdateModelMixin, viewsets.GenericViewSet):

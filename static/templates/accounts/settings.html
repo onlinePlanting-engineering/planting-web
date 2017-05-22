@@ -1,0 +1,48 @@
+<div class="col-md-4 col-md-offset-4">
+  <div class="well" ng-show="vm.account">
+    <form role="form" class="settings" ng-submit="vm.update()">
+      <div class="form-group">
+        <label for="settings__username">用户名</label>
+        <input type="text" class="form-control" id="settings__username" ng-model="vm.account.username" placeholder="ex. 17682371886" />
+      </div>
+
+      <!-- <div class="form-group">
+        <label for="settings__password">新密码</label>
+        <input type="password" class="form-control" id="settings__password" ng-model="vm.account.password" placeholder="ex. new passowrd" />
+      </div>
+
+      <div class="form-group">
+        <label for="settings__confirm-password">确认新密码</label>
+        <input type="password" class="form-control" id="settings__confirm-password" ng-model="vm.account.confirm_password" placeholder="ex. new passowrd confirm" />
+      </div> -->
+
+      <div class="form-group">
+        <label for="settings__nickname">昵称</label>
+        <input type="text" class="form-control" id="settings__nickname" ng-model="vm.account.profile.nickname" placeholder="ex. 卡布奇诺" />
+      </div>
+
+      <div class="form-group">
+        <label for="settings__gender">性别</label>
+        <select id="settings__gender" ng-model="vm.account.profile.gender" ng-options="gender.code as gender.name for gender in vm.genders">
+          <!-- <option value="">- 选择性别 -</option> -->
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="settings__address">地址</label>
+        <input type="text" class="form-control" id="settings__address" ng-model="vm.account.profile.addr" placeholder="ex. 浙江 宁波 高新区 研发园" />
+      </div>
+
+      <div class="form-group">
+        <label for="settings__heading-img">头像</label>
+        <!-- <lf-ng-md-file-input lf-files="vm.account.img_heading" class="form-control" id="settings__heading-img"  preview ></lf-ng-md-file-input> -->
+        <lf-ng-md-file-input lf-files="vm.files" preview ></lf-ng-md-file-input>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">提交</button>
+        <button type="button" class="btn btn-danger pull-right" ng-click="vm.destroy()">注销账号</button>
+      </div>
+    </form>
+  </div>
+</div>

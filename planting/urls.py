@@ -27,7 +27,7 @@ schema_view = get_swagger_view(title='Planting Web API')
 from rest_framework_jwt.views import obtain_jwt_token
 
 from farm.api.views import FarmViewSet, FarmImageViewSet
-from accounts.api.views import ProfileViewSet
+from accounts.api.views import ProfileViewSet, UserViewSet
 from lands.api.views import LandViewSet, MetaViewSet, MetaImageViewSet
 from seeds.api.views import CategoryViewSet, VegetableViewSet, VegMetaViewSet, VegMetaImageViewSet
 
@@ -46,6 +46,8 @@ router.register(r'seed/categories', CategoryViewSet)
 router.register(r'seed/vegetables', VegetableViewSet)
 router.register(r'seed/vegmetas', VegMetaViewSet)
 router.register(r'seed/vegmetaimages', VegMetaImageViewSet)
+
+router.register(r'accounts', UserViewSet)
 
 # router.register(r'comment/list', CommentListAPIView)
 # router.register(r'comment/create', CommentCreateAPIView)
@@ -76,6 +78,12 @@ if settings.DEBUG:
         url(r'^static/(?P<path>.*)$', serve,
             {'document_root': settings.STATIC_ROOT}),
     ])
+
+# API Endpoint for angular
+urlpatterns += [
+    url(r'^api/v1/accounts/', include('accounts.api.urls', namespace='v1-accounts-api')),
+    # url(r'^api/v1/', include(router.urls)),
+]
 
 # url entry for angular application
 urlpatterns.extend([

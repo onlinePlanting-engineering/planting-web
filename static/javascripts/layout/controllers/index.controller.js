@@ -10,12 +10,12 @@
   function IndexController($scope, Authentication, Snackbar){
     var vm = this;
 
-    vm.isAuthenticated = Authentication.isAuthenticated;
+    vm.isAuthenticated = Authentication.isAuthenticated();
 
     activate();
 
     function activate(){
-      console.log(vm.isAuthenticated);
+      console.log("Is Authenticated: ", vm.isAuthenticated);
     }
 
   }

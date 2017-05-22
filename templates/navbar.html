@@ -1,0 +1,26 @@
+<nav class="navbar navbar-default" role="navigation" ng-controller="NavbarController as vm">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#we-are-borg-navbar">
+        <span class="sr-only">Toggle Navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">圃朗庭·生态农场</a>
+    </div> <!-- ./navbar-header -->
+
+    <div class="collapse navbar-collapse" id="we-are-borg-navbar">
+      <ul class="nav navbar-nav pull-right">
+        {% if user.is_authenticated %}
+          <li><a href="/+{{ user.username }}">+{{ user.username }}</a></li>
+          <li><a href="/+{{ user.username }}/settings">用户配置</a></li>
+          <li><a href="javascript:void(0)" ng-click="vm.logout()">注销</a></li>
+        {% else %}
+          <li><a href="/login">登入</a></li>
+          <li><a href="/register">注册</a></li>
+        {% endif %}
+      </ul>
+    </div> <!-- /.collapse.navbar-collapse -->
+  </div> <!-- /.container-fluid -->
+</nav>

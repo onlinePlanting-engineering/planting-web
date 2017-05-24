@@ -13,7 +13,7 @@ class FarmImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FarmImage
-        fields = ('url', 'img', 'flags', 'is_delete')
+        fields = ('url', 'img', 'flags', 'is_delete', 'updated_date')
 
 class FarmSerializer(serializers.ModelSerializer):
     # images = serializers.HyperlinkedRelatedField(many=True, view_name='farmimage-detail', read_only=True)

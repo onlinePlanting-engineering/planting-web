@@ -77,6 +77,9 @@ class Comment(models.Model):
 
     @property
     def is_parent(self):
-        if self.parent is not None:
+        if self.children().count() == 0:
             return False
         return True
+        # if self.parent is not None:
+        #     return False
+        # return True

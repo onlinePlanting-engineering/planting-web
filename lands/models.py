@@ -10,7 +10,8 @@ User = get_user_model()
 
 class Land(models.Model):
     farm = models.ForeignKey(Farm, on_delete=models.CASCADE, related_name='lands')
-    cat = models.BooleanField(default=False)            #是否有棚
+    cat = models.BooleanField(default=False)            # 是否有棚
+    is_trusteed = models.BooleanField(default=True)     # 是否托管，True-托管，False-不托管
     num = models.PositiveSmallIntegerField(default=0)
     name = models.CharField(max_length=16, null=True, blank=True)
     size = models.PositiveIntegerField(default=666)     # 每块土地大小
@@ -31,7 +32,7 @@ class Land(models.Model):
 class Meta(models.Model):
     land = models.ForeignKey(Land, on_delete=models.CASCADE, related_name='metas')
     owner = models.ForeignKey(User)
-    num = models.CharField(max_length=12, blank=True, null=True)
+    num = models.CharField(max_length=12, unique=True)
     is_rented = models.BooleanField(default=False)
     size = models.PositiveIntegerField(default=33)
     price = models.DecimalField(default=2999.99, max_digits=10, decimal_places=2)

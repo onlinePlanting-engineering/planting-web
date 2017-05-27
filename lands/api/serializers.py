@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from lands.models import Land, Meta, MetaImage
+from accounts.api.serializers import UserSerializer
 
 class MetaImageSerializer(serializers.ModelSerializer):
     meta = serializers.ReadOnlyField(source='meta.num')
@@ -11,6 +12,7 @@ class MetaImageSerializer(serializers.ModelSerializer):
 class MetaSerializer(serializers.ModelSerializer):
     # images = serializers.HyperlinkedRelatedField(many=True, view_name='metaimage-detail', read_only=True)
     images = MetaImageSerializer(many=True, read_only=True)
+    owner = UserSerializer(read_only=True)
 
     class Meta:
         model = Meta
@@ -24,4 +26,4 @@ class LandSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Land
-        fields = ('id', 'url', 'farm', 'cat', 'size', 'is_active', 'metas')
+        fields = ('id', 'url', 'farm', 'cat', 'is_trusteed', 'size', 'is_active', 'metas')

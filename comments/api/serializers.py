@@ -60,21 +60,31 @@ def create_comment_serializer(model_type='farm', id=None, parent_id=None, user=N
     return CommentCreateSerializer
 
 class CommentListSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name='comments-api:thread')
+    # url = serializers.HyperlinkedIdentityField(view_name='comments-api:thread')
+    url = serializers.CharField(source='get_api_url', read_only=True)
     reply_count = serializers.SerializerMethodField()
     user = UserSerializer(read_only=True)
+    type = serializers.CharField(source='get_content_type_name', read_only=True)
+    replies = serializers.SerializerMethodField()
     class Meta:
         model = Comment
         fields = [
-            'url',
             'id',
+            'url',
             'user',
             'content',
             'grade',
-            'reply_count',
             'timestamp',
-            'parent'
+            'parent',
+            'type',
+            'object_id',
+            'reply_count',
+            'replies',
         ]
+
+    def get_replies(self, obj):
+        return None
+
 
     def get_reply_count(self, obj):
         if obj.is_parent:
@@ -96,18 +106,24 @@ class CommentDetailSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     reply_count = serializers.SerializerMethodField()
     replies = serializers.SerializerMethodField()
+    type = serializers.CharField(source='get_content_type_name', read_only=True)
+    url = serializers.CharField(source='get_api_url', read_only=True)
 
     class Meta:
         model = Comment
         fields = [
             'id',
+            'url',
             'user',
             'content',
             'grade',
-            'replies',
-            'reply_count',
             'timestamp',
-            'parent'
+            'parent',
+            'type',
+            'object_id',
+            'reply_count',
+            'replies',
+
         ]
 
         read_only_fields = [

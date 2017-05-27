@@ -66,11 +66,11 @@ class Comment(models.Model):
     def __str__(self):
         return self.user.username
 
-    def get_absolute_url(self):
-        return reverse("comments:thread", kwargs={'id': self.id})
+    def get_api_url(self):
+        return reverse("comments-api:thread", kwargs={'pk': self.id})
 
-    def get_delete_url(self):
-        return reverse('comments:delete', kwargs={'id':self.id})
+    def get_content_type_name(self):
+        return self.content_type.name
 
     def children(self): # replies
         return Comment.objects.filter(parent=self)

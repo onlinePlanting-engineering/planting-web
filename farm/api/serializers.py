@@ -25,7 +25,7 @@ class FarmSerializer(serializers.ModelSerializer):
     # comments = serializers.SerializerMethodField()
 
     class Meta:
-        fields = ('url', 'id', 'name', 'owner', 'price', 'subject',
+        fields = ('url', 'id', 'name', 'owner', 'price', 'subject', 'addr', 'phone',
                   'is_delete', 'notice', 'content', 'images')
 
         model = Farm

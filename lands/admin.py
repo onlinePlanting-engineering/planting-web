@@ -15,5 +15,5 @@ class LandAdmin(admin.ModelAdmin):
 class MetaAdmin(admin.ModelAdmin):
     inlines = [MetaImageInline, ]
 
-admin.site.register(Land, LandAdmin)
+admin.site.register(Land)
 admin.site.register(Meta, MetaAdmin)

@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from farm.models import farm_image_storage_directory
 from tinymce_4.fields import TinyMCEModelField
 from django.core.urlresolvers import reverse
+from django.db.models.signals import post_save
 
 User = get_user_model()
 
@@ -62,3 +63,27 @@ class MetaImage(models.Model):
 
     def __str__(self):
         return '{meta} - {image}'.format(meta=self.meta.num, image=self.img.url)
+
+def create_land_metas(sender, instance, created, **kwargs):
+    if created:
+        item_size = instance.item_size
+        item_price = instance.item_price
+        owner = instance.farm.owner
+        name = instance.name
+
+        count = instance.count
+        if count == 0:
+            count = instance.size / item_size
+
+        for i in range(count):
+            num = '{:04d}'.format(i+1)
+            num = '{land_name}-{num}'.format(land_name=name, num=num)
+            Meta.objects.create(
+                land = instance,
+                owner = owner,
+                num = num,
+                size = item_size,
+                price = item_price
+            )
+
+post_save.connect(create_land_metas, sender=Land)

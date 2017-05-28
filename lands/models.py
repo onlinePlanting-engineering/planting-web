@@ -5,6 +5,7 @@ from farm.models import Farm
 from django.contrib.auth import get_user_model
 from farm.models import farm_image_storage_directory
 from tinymce_4.fields import TinyMCEModelField
+from django.core.urlresolvers import reverse
 
 User = get_user_model()
 
@@ -28,6 +29,9 @@ class Land(models.Model):
     def __str__(self):
         return '{farm_name} - {cat} - {num}'.\
             format(farm_name=self.farm.name, cat=self.cat, num=self.num)
+
+    def get_api_url(self):
+        return reverse("land-detail", kwargs={'pk': self.id})
 
 class Meta(models.Model):
     land = models.ForeignKey(Land, on_delete=models.CASCADE, related_name='metas')

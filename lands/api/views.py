@@ -3,11 +3,10 @@ from rest_framework.response import Response
 from rest_framework import (
     viewsets, permissions
 )
-from lands.models import Land, Meta, MetaImage
+from lands.models import Land, Meta
 from .serializers import (
     LandSerializer,
-    MetaSerializer,
-    MetaImageSerializer
+    MetaSerializer
 )
 
 class LandViewSet(viewsets.ReadOnlyModelViewSet):
@@ -53,22 +52,22 @@ class MetaViewSet(viewsets.ReadOnlyModelViewSet):
             'status_code': status.HTTP_200_OK
         }, status=status.HTTP_200_OK)
 
-class MetaImageViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = MetaImage.objects.all()
-    serializer_class = MetaImageSerializer
-
-    def list(self, request, *args, **kwargs):
-        metaimages = MetaImage.objects.all().order_by('-id')
-        serializer = self.get_serializer(metaimages, many=True)
-        return Response({
-            'data': serializer.data,
-            'status_code': status.HTTP_200_OK
-        }, status=status.HTTP_200_OK)
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        return Response({
-            'data': serializer.data,
-            'status_code': status.HTTP_200_OK
-        }, status=status.HTTP_200_OK)
+# class MetaImageViewSet(viewsets.ReadOnlyModelViewSet):
+#     queryset = MetaImage.objects.all()
+#     serializer_class = MetaImageSerializer
+#
+#     def list(self, request, *args, **kwargs):
+#         metaimages = MetaImage.objects.all().order_by('-id')
+#         serializer = self.get_serializer(metaimages, many=True)
+#         return Response({
+#             'data': serializer.data,
+#             'status_code': status.HTTP_200_OK
+#         }, status=status.HTTP_200_OK)
+#
+#     def retrieve(self, request, *args, **kwargs):
+#         instance = self.get_object()
+#         serializer = self.get_serializer(instance)
+#         return Response({
+#             'data': serializer.data,
+#             'status_code': status.HTTP_200_OK
+#         }, status=status.HTTP_200_OK)

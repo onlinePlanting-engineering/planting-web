@@ -1,15 +1,15 @@
 from rest_framework import serializers
-from lands.models import Land, Meta, MetaImage
+from lands.models import Land, Meta
 from accounts.api.serializers import UserSerializer
 from images.models import ImageGroup
 from images.api.serializers import ImageGroupUrlSerializer
 
-class MetaImageSerializer(serializers.ModelSerializer):
-    meta = serializers.ReadOnlyField(source='meta.num')
-
-    class Meta:
-        model = MetaImage
-        fields = ('img', 'created_date', 'meta')
+# class MetaImageSerializer(serializers.ModelSerializer):
+#     meta = serializers.ReadOnlyField(source='meta.num')
+#
+#     class Meta:
+#         model = MetaImage
+#         fields = ('img', 'created_date', 'meta')
 
 class MetaSerializer(serializers.ModelSerializer):
     # images = MetaImageSerializer(many=True, read_only=True)

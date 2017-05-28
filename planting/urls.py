@@ -28,7 +28,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 
 from farm.api.views import FarmViewSet, FarmImageViewSet
 from accounts.api.views import ProfileViewSet
-from lands.api.views import LandViewSet, MetaViewSet, MetaImageViewSet
+from lands.api.views import LandViewSet, MetaViewSet
 from seeds.api.views import CategoryViewSet, VegetableViewSet, VegMetaViewSet, VegMetaImageViewSet
 from images.api.views import ImageGroupViewSet, ImageViewSet
 

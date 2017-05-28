@@ -12,7 +12,7 @@ class ImageGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ImageGroup
-        fields = ['desc', 'timestamp','imgs']
+        fields = ['id', 'desc', 'timestamp','imgs']
 
     def get_imgs(self, obj):
         return ImageSerializer(obj.imgs ,many=True).data

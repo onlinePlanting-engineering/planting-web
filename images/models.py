@@ -7,9 +7,13 @@ from uuid import uuid4
 
 User = get_user_model()
 
-def farm_image_storage_directory(instance, filename):
+def content_file_name(instance, filename):
     ext = filename.split('.')[-1]
-    return 'farm/{0}.{1}'.format(uuid4().hex, ext)
+    return '{user}/{filename}.{ext}'.format(
+        user=instance.group.user.username,
+        filename=uuid4().hex,
+        ext=ext
+    )
 
 class ImageGroupManager(models.Manager):
     def all(self):
@@ -65,7 +69,7 @@ class ImageGroup(models.Model):
 
 class Image(models.Model):
     group = models.ForeignKey(ImageGroup, on_delete=models.CASCADE, related_name='imgs')
-    img = models.ImageField(upload_to=farm_image_storage_directory)
+    img = models.ImageField(upload_to=content_file_name)
     is_delete = models.BooleanField(default=False)
     created_date = models.DateField(auto_now_add=True)
     updated_date = models.DateField(auto_now=True)

@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
             name='Image',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('img', models.ImageField(upload_to=images.models.farm_image_storage_directory)),
+                ('img', models.ImageField(upload_to=images.models.content_file_name)),
                 ('is_delete', models.BooleanField(default=False)),
                 ('created_date', models.DateField(auto_now_add=True)),
                 ('updated_date', models.DateField(auto_now=True)),

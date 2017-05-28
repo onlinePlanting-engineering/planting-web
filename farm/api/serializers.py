@@ -48,7 +48,7 @@ class FarmSerializer(serializers.ModelSerializer):
         return comments
 
     def get_lands(self, obj):
-        lands_qs = Land.objects.filter(pk=obj.id)
+        lands_qs = Land.objects.filter(farm=obj.id)
         lands = FarmLandSerializer(lands_qs, many=True).data
         return lands
 

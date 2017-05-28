@@ -3,6 +3,8 @@ from rest_framework import serializers
 from comments.models import Comment
 from comments.api.serializers import CommentSerializer
 from lands.models import Land
+from images.models import ImageGroup, Image
+from images.api.serializers import ImageGroupUrlSerializer
 
 class FarmImageSerializer(serializers.ModelSerializer):
     # Create a custom method field, that list farms belong to current user
@@ -27,17 +29,16 @@ class FarmLandSerializer(serializers.ModelSerializer):
         fields = ['url', ]
 
 class FarmSerializer(serializers.ModelSerializer):
-    # images = serializers.HyperlinkedRelatedField(many=True, view_name='farmimage-detail', read_only=True)
-    images = FarmImageSerializer(many=True, read_only=True)
     owner = serializers.ReadOnlyField(source='owner.username')
     notice = serializers.HyperlinkedIdentityField(view_name='farm-notice', format='html')
     content = serializers.HyperlinkedIdentityField(view_name='farm-content', format='html')
     comments = serializers.SerializerMethodField()
     lands = serializers.SerializerMethodField()
+    imgs = serializers.SerializerMethodField()
 
     class Meta:
         fields = ('url', 'id', 'name', 'owner', 'price', 'subject', 'addr', 'phone',
-                  'is_delete', 'notice', 'content', 'images', 'comments', 'lands')
+                  'is_delete', 'notice', 'content', 'comments', 'lands', 'imgs')
 
         model = Farm
 
@@ -50,3 +51,8 @@ class FarmSerializer(serializers.ModelSerializer):
         lands_qs = Land.objects.filter(pk=obj.id)
         lands = FarmLandSerializer(lands_qs, many=True).data
         return lands
+
+    def get_imgs(self, obj):
+        img_grp_qs = ImageGroup.objects.filter_by_instance(obj)
+        img_grps = ImageGroupUrlSerializer(img_grp_qs, many=True).data
+        return img_grps

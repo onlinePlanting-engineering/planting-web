@@ -30,24 +30,23 @@ from farm.api.views import FarmViewSet, FarmImageViewSet
 from accounts.api.views import ProfileViewSet
 from lands.api.views import LandViewSet, MetaViewSet, MetaImageViewSet
 from seeds.api.views import CategoryViewSet, VegetableViewSet, VegMetaViewSet, VegMetaImageViewSet
-
+from images.api.views import ImageGroupViewSet, ImageViewSet
 
 router = DefaultRouter()
 router.register(r'farms', FarmViewSet)
-router.register(r'farmimages', FarmImageViewSet)
+# router.register(r'farmimages', FarmImageViewSet)
 router.register(r'profiles', ProfileViewSet)
-router.register(r'lands', LandViewSet)
-router.register(r'metas', MetaViewSet)
-router.register(r'metaimages', MetaImageViewSet)
+router.register(r'land/lands', LandViewSet)
+router.register(r'land/metas', MetaViewSet)
+# router.register(r'metaimages', MetaImageViewSet)
 
-router.register(r'categories', CategoryViewSet)
-router.register(r'vegetables', VegetableViewSet)
-router.register(r'vegmetas', VegMetaViewSet)
-router.register(r'vegmetaimages', VegMetaImageViewSet)
+router.register(r'seed/categories', CategoryViewSet)
+router.register(r'seed/vegetables', VegetableViewSet)
+router.register(r'seed/vegmetas', VegMetaViewSet)
+# router.register(r'vegmetaimages', VegMetaImageViewSet)
 
-# router.register(r'comment/list', CommentListAPIView)
-# router.register(r'comment/create', CommentCreateAPIView)
-# router.register(r'comment/detail', CommentDetailAPIView)
+router.register(r'image_groups', ImageGroupViewSet)
+router.register(r'images', ImageViewSet)
 
 urlpatterns = [
     url(r'^docs/', schema_view),

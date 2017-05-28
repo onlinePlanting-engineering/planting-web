@@ -8,3 +8,6 @@ env
 **/*pyc
 planting/static/images/
 planting/static/media/
+dist/
+node_modules/
+static/bower_components

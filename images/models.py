@@ -52,6 +52,7 @@ class ImageGroup(models.Model):
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
 
+
     objects = ImageGroupManager()
 
     class Meta:
@@ -73,6 +74,17 @@ class Image(models.Model):
     is_delete = models.BooleanField(default=False)
     created_date = models.DateField(auto_now_add=True)
     updated_date = models.DateField(auto_now=True)
+    is_cover = models.BooleanField(default=False)
 
     def __str__(self):
-        return '{image}'.format(image=self.img.url)
+        try:
+            object_name = self.group.content_object.name
+        except:
+            object_name = None
+        return '{img_id} - {content_type} - {object_name} - {img_group} - {is_cover}'.format(
+            content_type = self.group.content_type.name,
+            object_name = object_name,
+            img_group = self.group.id,
+            img_id = self.id,
+            is_cover=self.is_cover
+        )

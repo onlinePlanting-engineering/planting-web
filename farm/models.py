@@ -5,6 +5,7 @@ from uuid import uuid4
 from tinymce_4.fields import TinyMCEModelField
 from django.contrib.auth import get_user_model
 from comments.models import Comment
+from images.models import ImageGroup, Image
 
 User = get_user_model()
 
@@ -42,6 +43,18 @@ class Farm(models.Model):
         instance = self
         qs = Comment.objects.filter_by_instance(instance)
         return qs
+
+    @property
+    def home_img_url(self):
+        instance = self
+        qs = ImageGroup.objects.filter_by_instance(instance)
+        for ig in qs:
+            i_qs = ig.imgs.filter(is_cover=True)
+            if i_qs.count() > 0:
+                return i_qs.first().img.url
+
+        return None
+
 
 class FarmImage(models.Model):
     FLAG_CHOICES = (

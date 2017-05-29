@@ -9,3 +9,4 @@ class ImageGroupAdmin(admin.ModelAdmin):
     inlines = [ImageInline, ]
 
 admin.site.register(ImageGroup, ImageGroupAdmin)
+admin.site.register(Image)

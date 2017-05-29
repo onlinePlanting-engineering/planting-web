@@ -73,7 +73,7 @@ def create_land_metas(sender, instance, created, **kwargs):
 
         count = instance.count
         if count == 0:
-            count = instance.size / item_size
+            count = int(instance.size / item_size)
 
         for i in range(count):
             num = '{:04d}'.format(i+1)

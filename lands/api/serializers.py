@@ -33,4 +33,4 @@ class LandSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Land
-        fields = ('id', 'url', 'farm', 'cat', 'is_trusteed', 'size', 'is_active', 'metas')
+        fields = ('id', 'url', 'farm', 'cat', 'is_trusteed', 'size', 'name', 'desc','is_active', 'metas')

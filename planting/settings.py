@@ -97,7 +97,8 @@ INSTALLED_APPS = [
     'lands',
     'seeds',
     'comments',
-    'images'
+    'images',
+    'orders'
 
 ]
 

@@ -1,5 +1,6 @@
 from django.db import models
 from farm.models import farm_image_storage_directory
+import pypinyin
 
 class Category(models.Model):
     name = models.CharField(max_length=12)
@@ -50,6 +51,11 @@ class VegMeta(models.Model):
             vgcat = self.vgcat.name,
             name = self.name
         )
+
+    @property
+    def first_letter(self):
+        first_letters = pypinyin.pinyin(self.name, pypinyin.FIRST_LETTER)
+        return first_letters[0][0].upper()
 
 class VegMetaImage(models.Model):
     vegmeta = models.ForeignKey(VegMeta, related_name='images')

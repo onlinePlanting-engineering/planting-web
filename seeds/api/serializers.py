@@ -15,7 +15,7 @@ class VegMetaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VegMeta
-        fields = ('url', 'name', 'stime', 'etime', 'cycle', 'region', 'output',
+        fields = ('url', 'name', 'first_letter', 'stime', 'etime', 'cycle', 'region', 'output',
                   'seed_price', 'mature_price', 'desc', 'content', 'is_active', 'imgs')
 
     def get_imgs(self, obj):

@@ -3,6 +3,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
+from tinymce_4.fields import TinyMCEModelField
 
 User = get_user_model()
 
@@ -51,7 +52,8 @@ class Comment(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     parent = models.ForeignKey('self', null=True, blank=True)
-    content = models.TextField()
+    # content = models.TextField()
+    content = TinyMCEModelField(default='评论内容')
     grade = models.PositiveSmallIntegerField(default=5, choices=GRADE_CHOICES)
     timestamp = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)

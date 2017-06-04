@@ -7,6 +7,7 @@ from farm.models import farm_image_storage_directory
 from tinymce_4.fields import TinyMCEModelField
 from django.core.urlresolvers import reverse
 from django.db.models.signals import post_save
+from tinymce_4.fields import TinyMCEModelField
 
 User = get_user_model()
 
@@ -15,7 +16,8 @@ class Land(models.Model):
     cat = models.BooleanField(default=False)            # 是否有棚
     is_trusteed = models.BooleanField(default=True)     # 是否托管，True-托管，False-不托管
     name = models.CharField(max_length=16, null=True, blank=True)
-    desc = models.TextField(default='', null=True, blank=True)
+    # desc = models.TextField(default='', null=True, blank=True)
+    desc = TinyMCEModelField(default="土地描述")
     size = models.PositiveIntegerField(default=666)     # 每块土地大小
     is_active = models.BooleanField(default=False)      # 是否可用
     count = models.PositiveIntegerField(default=0)      # 切分数量

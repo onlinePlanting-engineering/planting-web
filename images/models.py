@@ -4,6 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from uuid import uuid4
+from tinymce_4.fields import TinyMCEModelField
 
 User = get_user_model()
 
@@ -47,7 +48,8 @@ class ImageGroup(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
-    desc = models.CharField(max_length=1024, null=True, blank=True)
+    # desc = models.CharField(max_length=1024, null=True, blank=True)
+    desc = TinyMCEModelField(default="图片描述")
     timestamp = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)

@@ -13,7 +13,7 @@ class Category(models.Model):
     is_deleted = models.BooleanField(default=False, db_index=True)
 
     def __str__(self):
-        return '{id} - {name}'.format(id = self.id, name = self.name)
+        return '{name}'.format(name = self.name)
 
 class Vegetable(models.Model):
     cat = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='vegetables')
@@ -28,7 +28,7 @@ class Vegetable(models.Model):
     is_deleted = models.BooleanField(default=False, db_index=True)
 
     def __str__(self):
-        return '{id} - {name}'.format(id = self.id, name = self.name)
+        return '{name}'.format(name = self.name)
 
 class VegMeta(models.Model):
     vgcat = models.ForeignKey(Vegetable, on_delete=models.CASCADE, related_name='vegmetas')
@@ -50,9 +50,7 @@ class VegMeta(models.Model):
     is_deleted = models.BooleanField(default=False, db_index=True)
 
     def __str__(self):
-        return '{id} - {vgcat} - {name}'.format(
-            id = self.id,
-            vgcat = self.vgcat.name,
+        return '{name}'.format(
             name = self.name
         )
 

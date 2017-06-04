@@ -6,6 +6,7 @@ class FarmImageInline(admin.TabularInline):
     extra = 3
 
 class FarmAdmin(admin.ModelAdmin):
+    list_display = ('id', 'owner', 'name', 'addr', 'phone', 'price')
     inlines = [FarmImageInline, ]
 
 admin.site.register(Farm, FarmAdmin)

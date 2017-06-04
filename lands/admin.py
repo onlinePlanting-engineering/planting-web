@@ -11,9 +11,12 @@ class MetaInline(admin.TabularInline):
 
 class LandAdmin(admin.ModelAdmin):
     inlines = [MetaInline, ]
+    list_display = ('name', 'size', 'item_size', 'item_price', 'cat', 'is_trusteed', 'is_active')
+    list_filter = ('cat', 'is_trusteed', 'is_active')
 
-# class MetaAdmin(admin.ModelAdmin):
-#     inlines = [MetaImageInline, ]
+class MetaAdmin(admin.ModelAdmin):
+    list_display = ('land', 'num', 'owner', 'size', 'price', 'is_rented', 'is_active')
+    list_filter = ('is_rented', 'is_active')
 
-admin.site.register(Land)
-admin.site.register(Meta)
+admin.site.register(Land, LandAdmin)
+admin.site.register(Meta, MetaAdmin)

@@ -30,8 +30,8 @@ class Land(models.Model):
     flags = models.PositiveSmallIntegerField(default=0)
 
     def __str__(self):
-        return '{farm_name} - {cat} - {name}'.\
-            format(farm_name=self.farm.name, cat=self.cat, name=self.name)
+        return '{farm_name} - {name}'.\
+            format(farm_name=self.farm.name, name=self.name)
 
     def get_api_url(self):
         return reverse("land-detail", kwargs={'pk': self.id})

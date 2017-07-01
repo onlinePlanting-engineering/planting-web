@@ -99,7 +99,8 @@ INSTALLED_APPS = [
     'seeds',
     'comments',
     'images',
-    'orders'
+    'orders',
+    'cameras'
 
 ]
 

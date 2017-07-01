@@ -31,8 +31,15 @@ class FarmViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(farm.content)
 
     def list(self, request, *args, **kwargs):
-        farms = Farm.objects.all().order_by('-id')
-        serializer = self.get_serializer(farms, many=True)
+        query_set = Farm.objects.all().order_by('-id')
+
+        # Filter by username
+        username = request.query_params.get('username', None)
+        if username is not None:
+            query_set = query_set.filter(owner__username=username)
+
+        serializer = self.get_serializer(query_set, many=True)
+
         return Response({
             'data': serializer.data,
             'status_code': status.HTTP_200_OK

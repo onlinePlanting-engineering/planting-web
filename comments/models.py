@@ -54,7 +54,7 @@ class Comment(models.Model):
     parent = models.ForeignKey('self', null=True, blank=True)
     # content = models.TextField()
     content = TinyMCEModelField(default='评论内容')
-    grade = models.PositiveSmallIntegerField(default=5, choices=GRADE_CHOICES)
+    grade = models.PositiveSmallIntegerField(default=5, choices=GRADE_CHOICES, null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)

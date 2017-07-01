@@ -33,6 +33,8 @@ from seeds.api.views import CategoryViewSet, VegetableViewSet, VegMetaViewSet, V
 from images.api.views import ImageGroupViewSet, ImageViewSet
 from orders.api.views import OrderItemViewSet
 
+from cameras.api.views import CameraViewSet
+
 router = DefaultRouter()
 router.register(r'farms', FarmViewSet)
 # router.register(r'farmimages', FarmImageViewSet)
@@ -50,6 +52,8 @@ router.register(r'image_groups', ImageGroupViewSet)
 router.register(r'images', ImageViewSet)
 
 router.register(r'order_items', OrderItemViewSet)
+
+router.register(r'cameras', CameraViewSet)
 
 urlpatterns = [
     url(r'^docs/', schema_view),

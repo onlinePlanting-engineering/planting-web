@@ -11,3 +11,4 @@ planting/static/media/
 dist/
 node_modules/
 static/bower_components
+orders/migrations

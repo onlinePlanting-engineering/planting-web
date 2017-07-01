@@ -4,6 +4,8 @@ from accounts.api.serializers import UserSerializer
 from images.models import ImageGroup
 from images.api.serializers import ImageGroupUrlSerializer
 
+from cameras.api.serializers import CameraSerializer
+
 # class MetaImageSerializer(serializers.ModelSerializer):
 #     meta = serializers.ReadOnlyField(source='meta.num')
 #
@@ -30,7 +32,8 @@ class LandSerializer(serializers.ModelSerializer):
     farm = serializers.ReadOnlyField(source='farm.name')
     # metas = serializers.HyperlinkedRelatedField(many=True, view_name='meta-detail', read_only=True)
     metas = MetaSerializer(many=True, read_only=True)
+    cameras = CameraSerializer(many=True, read_only=True)
 
     class Meta:
         model = Land
-        fields = ('id', 'url', 'farm', 'cat', 'is_trusteed', 'size', 'name', 'desc','is_active', 'metas')
+        fields = ('id', 'url', 'farm', 'cat', 'is_trusteed', 'size', 'name', 'desc','is_active', 'cameras', 'metas')

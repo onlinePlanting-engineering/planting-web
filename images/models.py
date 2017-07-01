@@ -5,6 +5,8 @@ from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from uuid import uuid4
 from tinymce_4.fields import TinyMCEModelField
+import os
+from functools import partial
 
 User = get_user_model()
 
@@ -15,6 +17,20 @@ def content_file_name(instance, filename):
         filename=uuid4().hex,
         ext=ext
     )
+
+def _update_filename(instance, filename, path):
+    ext = filename.split('.')[-1]
+    # get filename
+    if instance.pk:
+        filename = '{}.{}'.format(instance.pk, ext)
+    else:
+        # set filename as random string
+        filename = '{}.{}'.format(uuid4().hex, ext)
+    # return the whole path to the file
+    return os.path.join(path, filename)
+
+def upload_to(path):
+    return partial(_update_filename, path=path)
 
 class ImageGroupManager(models.Manager):
     def all(self):

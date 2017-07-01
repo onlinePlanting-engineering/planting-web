@@ -22,12 +22,15 @@ class CommentCreateAPIView(generics.CreateAPIView):
         model_type = self.request.GET.get('type')
         id = self.request.GET.get('id')
         parent_id = self.request.GET.get('parent_id', None)
-        return create_comment_serializer(
-            model_type = model_type,
+
+        create_serializer = create_comment_serializer(
+            model_type=model_type,
             id=id,
-            parent_id = parent_id,
-            user = self.request.user
+            parent_id=parent_id,
+            user=self.request.user
         )
+
+        return create_serializer
 
 class CommentDetailAPIView(mixins.DestroyModelMixin, mixins.UpdateModelMixin,
                            generics.RetrieveAPIView):

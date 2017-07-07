@@ -13,6 +13,9 @@ def farm_image_storage_directory(instance, filename):
     ext = filename.split('.')[-1]
     return 'farm/{0}.{1}'.format(uuid4().hex, ext)
 
+class FarmManager(models.Manager):
+    pass
+
 class Farm(models.Model):
     id = models.AutoField(primary_key=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -27,6 +30,8 @@ class Farm(models.Model):
     updated_date = models.DateField(auto_now=True)
     notice = TinyMCEModelField(default="农场须知")   # 农场须知
     content = TinyMCEModelField(default='农场介绍')
+
+    objects = FarmManager()
 
     def __str__(self):
         return '{id} - {name}'.format(id = self.id, name = self.name)

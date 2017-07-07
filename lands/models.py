@@ -11,6 +11,9 @@ from tinymce_4.fields import TinyMCEModelField
 
 User = get_user_model()
 
+class LandManager(models.Manager):
+    pass
+
 class Land(models.Model):
     farm = models.ForeignKey(Farm, on_delete=models.CASCADE, related_name='lands')
     cat = models.BooleanField(default=False)            # 是否有棚
@@ -28,6 +31,8 @@ class Land(models.Model):
     updated_date = models.DateField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
     flags = models.PositiveSmallIntegerField(default=0)
+
+    objects = LandManager()
 
     def __str__(self):
         return '{farm_name} - {name}'.\

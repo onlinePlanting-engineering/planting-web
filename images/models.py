@@ -8,6 +8,8 @@ from tinymce_4.fields import TinyMCEModelField
 import os
 from functools import partial
 
+
+
 User = get_user_model()
 
 def content_file_name(instance, filename):
@@ -86,13 +88,19 @@ class ImageGroup(models.Model):
     def get_content_type_name(self):
         return self.content_type.name
 
+
+class ImageManager(models.Manager):
+    pass
+
 class Image(models.Model):
-    group = models.ForeignKey(ImageGroup, on_delete=models.CASCADE, related_name='imgs')
-    img = models.ImageField(upload_to=content_file_name)
+    group = models.ForeignKey(ImageGroup, on_delete=models.CASCADE, related_name='imgs', default=1)
+    img = models.ImageField(upload_to=upload_to('upload/imgs'))
     is_delete = models.BooleanField(default=False)
     created_date = models.DateField(auto_now_add=True)
     updated_date = models.DateField(auto_now=True)
     is_cover = models.BooleanField(default=False)
+
+    objects = ImageManager()
 
     def __str__(self):
         try:
@@ -106,3 +114,21 @@ class Image(models.Model):
             img_id = self.id,
             is_cover=self.is_cover
         )
+
+class CommonImageManager(models.Manager):
+    pass
+
+class CommonImage(models.Model):
+    """
+    Common image model don't need to bind any group
+    """
+    img = models.ImageField(upload_to=upload_to('upload/common/imgs'))
+    name = models.CharField(max_length=64, blank=True, null=True)
+    desc = models.CharField(max_length=64, blank=True, null=True)
+    is_delete = models.BooleanField(default=False)
+    created_date = models.DateField(auto_now_add=True)
+
+    objects = CommonImageManager()
+
+    def __str__(self):
+        return '{0} - {1}'.format(self.id, self.name)

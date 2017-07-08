@@ -30,7 +30,7 @@ from farm.api.views import FarmViewSet, FarmImageViewSet
 from accounts.api.views import ProfileViewSet
 from lands.api.views import LandViewSet, MetaViewSet
 from seeds.api.views import CategoryViewSet, VegetableViewSet, VegMetaViewSet, VegMetaImageViewSet
-from images.api.views import ImageGroupViewSet, ImageViewSet
+from images.api.views import ImageGroupViewSet, ImageViewSet, CommonImageViewSet
 from orders.api.views import OrderItemViewSet
 
 from cameras.api.views import CameraViewSet
@@ -50,6 +50,7 @@ router.register(r'seed/vegmetas', VegMetaViewSet)
 
 router.register(r'image_groups', ImageGroupViewSet)
 router.register(r'images', ImageViewSet)
+router.register(r'common/images', CommonImageViewSet)
 
 router.register(r'order_items', OrderItemViewSet)
 

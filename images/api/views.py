@@ -1,6 +1,6 @@
-from rest_framework.viewsets import ReadOnlyModelViewSet
-from .serializers import ImageGroupSerializer, ImageSerializer
-from images.models import Image, ImageGroup
+from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
+from .serializers import ImageGroupSerializer, ImageSerializer, CommonImageSerializer
+from images.models import Image, ImageGroup, CommonImage
 
 class ImageGroupViewSet(ReadOnlyModelViewSet):
     queryset = ImageGroup.objects.filter(id__gte=0)
@@ -9,3 +9,7 @@ class ImageGroupViewSet(ReadOnlyModelViewSet):
 class ImageViewSet(ReadOnlyModelViewSet):
     queryset = Image.objects.filter(id__gte=0)
     serializer_class = ImageSerializer
+
+class CommonImageViewSet(ModelViewSet):
+    queryset = CommonImage.objects.filter(id__gte=0)
+    serializer_class = CommonImageSerializer

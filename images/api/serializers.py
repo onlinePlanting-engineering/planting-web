@@ -1,4 +1,4 @@
-from images.models import Image, ImageGroup
+from images.models import Image, ImageGroup, CommonImage
 from rest_framework import serializers
 
 class ImageGroupUrlSerializer(serializers.ModelSerializer):
@@ -20,4 +20,9 @@ class ImageGroupSerializer(serializers.ModelSerializer):
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
+        fields = '__all__'
+
+class CommonImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommonImage
         fields = '__all__'

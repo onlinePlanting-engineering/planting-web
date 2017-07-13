@@ -100,7 +100,8 @@ INSTALLED_APPS = [
     'comments',
     'images',
     'orders',
-    'cameras'
+    'cameras',
+    'wp'
 
 ]
 
@@ -142,9 +143,21 @@ WSGI_APPLICATION = 'planting.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'planting2',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
+        'OPTIONS': {
+            # 'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",  # this will bring err "1366, "Incorrect string value:
+            'charset': 'utf8mb4',
+        }
     }
 }
 
@@ -227,3 +240,17 @@ REST_SESSION_LOGIN = False
 APPEND_SLASH = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
+
+
+AUTHENTICATION_BACKENDS = ( 'wp.backend.WPBackend', )
+AUTH_USER_MODEL = 'wp.WpUser'
+
+PASSWORD_HASHERS = (
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.SHA1PasswordHasher',
+    'django.contrib.auth.hashers.MD5PasswordHasher',
+    'django.contrib.auth.hashers.CryptPasswordHasher',
+    'hashers_passlib.phpass',
+)

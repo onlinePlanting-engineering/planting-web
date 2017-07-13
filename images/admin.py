@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ImageGroup, Image
+from .models import ImageGroup, Image, CommonImage
 
 class ImageAdmin(admin.ModelAdmin):
     list_display = ('id', 'group', 'is_cover', 'img')
@@ -14,5 +14,9 @@ class ImageGroupAdmin(admin.ModelAdmin):
     list_filter = ('content_type',)
     inlines = [ImageInline, ]
 
+class CommonImageAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'desc', 'img')
+
 admin.site.register(ImageGroup, ImageGroupAdmin)
 admin.site.register(Image, ImageAdmin)
+admin.site.register(CommonImage, CommonImageAdmin)

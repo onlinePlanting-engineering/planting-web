@@ -10,7 +10,7 @@ class MetaInline(admin.TabularInline):
 #     extra = 3
 
 class LandAdmin(admin.ModelAdmin):
-    inlines = [MetaInline, ]
+    # inlines = [MetaInline, ]
     list_display = ('name', 'size', 'item_size', 'item_price', 'cat', 'is_trusteed', 'is_active')
     list_filter = ('cat', 'is_trusteed', 'is_active')
 

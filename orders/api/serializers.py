@@ -6,10 +6,17 @@ from lands.api.serializers import MetaSerializer
 
 class OrderItemSerializer(serializers.ModelSerializer):
     url = serializers.CharField(source='get_api_url', read_only=True)
-    product = MetaSerializer()
+    product = MetaSerializer(read_only=True)
     class Meta:
         model = OrderItem
-        fields = ['id', 'url', 'product_name', 'product_code', 'product', 'unit_price', 'quantity', 'line_total']
+        fields = [ 'id', 'url', 'product_code', 'unit_price', 'quantity', 'line_total','product']
+
+        extra_kwargs = {
+            'line_total': {'read_only': True},
+            'product_code': {'read_only': True},
+            'unit_price': {'read_only': True},
+        }
+
 
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,11 +29,9 @@ class OrderSerializer(serializers.ModelSerializer):
     url = serializers.CharField(source='get_api_url', read_only=True)
     class Meta:
         model = BaseOrder
-        fields = ['id', 'url', 'customer', 'total', 'subtotal', 'status', 'is_valid','items']
+        fields = ['id', 'url', 'number', 'customer', 'total', 'subtotal', 'status', 'is_valid','items']
 
 class CreateOrderSerilzer(serializers.ModelSerializer):
-    # pids = serializers.ListField( child=serializers.IntegerField(min_value=0) )
-
     class Meta:
         model = BaseOrder
         fields = ['id', 'total', 'subtotal']
@@ -34,6 +39,7 @@ class CreateOrderSerilzer(serializers.ModelSerializer):
 
     def validate(self, data):
         pids = self.context['request'].data['pids']
+        pids = eval(pids)
         if not pids:
             raise serializers.ValidationError('Please select land(s) and pass valid lands id list.')
 
@@ -57,6 +63,7 @@ class CreateOrderSerilzer(serializers.ModelSerializer):
         total = validated_data.get('total', None)
         subtotal = validated_data.get('subtotal', None)
         pids = self.context['request'].data['pids']
+        pids = eval(pids)
         customer = self.context["request"].user
         instance = BaseOrder.objects.create(total=total, subtotal=subtotal, customer=customer)
 
@@ -65,12 +72,13 @@ class CreateOrderSerilzer(serializers.ModelSerializer):
             OrderItem.objects.create(
                 order=instance,
                 product=product,
-                product_name=product.num,
-                unit_price=product.price,
-                line_total=product.price
             )
             # lock the product
             product.is_rented = True
             product.save()
+
+        # Change order status to waiting_payment
+        instance.status = BaseOrder.TRANSITION_TARGETS[1][0]
+        instance.save()
 
         return instance

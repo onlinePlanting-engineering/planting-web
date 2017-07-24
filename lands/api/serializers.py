@@ -20,7 +20,7 @@ class MetaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Meta
-        fields = ('url', 'num', 'owner', 'land', 'size',
+        fields = ('url', 'id', 'num', 'owner', 'land', 'size',
                   'price', 'is_rented', 'imgs')
 
     def get_imgs(self, obj):

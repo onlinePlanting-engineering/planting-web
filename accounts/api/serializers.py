@@ -74,12 +74,11 @@ class ProfileSerializer(ModelSerializer):
         return  instance
 
 class UserSerializer(ModelSerializer):
-    profile = ProfileSerializer()
-    username = CharField(max_length=24, min_length=8, validators=[is_phone_number], allow_blank=True)
+    # profile = ProfileSerializer()
+    # username = CharField(max_length=24, min_length=8, validators=[is_phone_number], allow_blank=True)
     class Meta:
         model = User
-        fields = ('id', 'username', 'profile')
-        # fields = ('id', 'username')
+        fields = ('id', 'user_login')
 
         filter_backends = (filters.OrderingFilter)
         ordering_fields = ('id')

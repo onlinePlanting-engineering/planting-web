@@ -16,7 +16,7 @@ class OrderCreateAPIView(generics.CreateAPIView):
         self.perform_create(serializer)
 
         created_instance = BaseOrder.objects.get(pk=serializer.data['id'])
-        order_detail_serializer = OrderSerializer(created_instance, context={request: request})
+        order_detail_serializer = OrderSerializer(created_instance, context={'request': request})
 
         return Response(data=order_detail_serializer.data, status=status.HTTP_201_CREATED)
 

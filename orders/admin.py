@@ -6,7 +6,8 @@ class OrderItemInline(admin.TabularInline):
 
 class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline, ]
-    list_display = ('id', 'number', 'customer', 'status', 'total')
-    readonly_fields = ('number', )
+    list_display = ('id', 'number', 'customer', 'status', 'total', 'created_at', 'updated_at')
+    fields = ('number', 'customer', 'status', 'total', 'created_at', 'updated_at')
+    readonly_fields = ('number', 'created_at', 'updated_at')
 
 admin.site.register(BaseOrder, OrderAdmin)
